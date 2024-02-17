@@ -26,12 +26,11 @@ const Navbar = () => {
 Login
             </Link>
             
-            <a
-              href="#_"
-              className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all   duration-300 bg-indigo-700 rounded shadow-md fold-bold lg:bg-white lg:text-indigo-700 sm:w-full lg:shadow-none hover:shadow-xl"
-            >
-              Get Code
-            </a>
+            <Link to="https://github.com/rushiii3/deep-blue-project-chatbot"               className="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all   duration-300 bg-indigo-700 rounded shadow-md fold-bold lg:bg-white lg:text-indigo-700 sm:w-full lg:shadow-none hover:shadow-xl"
+>
+            Get Code
+            </Link>
+           
             <svg
               className="absolute top-0 left-0 hidden w-screen max-w-3xl -mt-64 -ml-12 lg:block"
               viewBox="0 0 818 815"

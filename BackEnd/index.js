@@ -6,6 +6,10 @@ const Grid = require('gridfs-stream');
 const cors = require('cors');
 const connectDB = require('./db');
 const mongoose = require('mongoose');
+const { ObjectID } = require('mongodb');
+
+
+
 
 const app = express();
 
@@ -149,7 +153,9 @@ app.get('/download/:fileId', async (req, res) => {
     res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
     res.setHeader("Content-Type", file.contentType);
     console.log("headers sent");
+    
     gfs.createReadStream({ filename: file.filename }).pipe(res)
+    res.status(200).json({success:true});
     console.log("sending response");
     // const file = await File.findById(fileId);
 
@@ -168,6 +174,29 @@ app.get('/download/:fileId', async (req, res) => {
     res.status(500).json({ error: 'Error downloading file' });
   }
 });
+
+// Route for downloading a file by fileId
+app.get('/downloads/:fileId', async (req, res) => {
+  const { fileId } = req.params;
+
+  try {
+    const gfsFiles = conn.collection("fs.files");
+    const file = await gfsFiles.findOne({ _id: new ObjectID(fileId) });
+    if (!file) {
+      return res.status(400).json({ success: false, error: 'File not found' });
+    }
+    res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
+    res.setHeader("Content-Type", file.contentType);
+    const readstream = gfs.createReadStream({ _id: new ObjectID(fileId) });
+    readstream.pipe(res);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    res.status(500).json({ error: 'Error downloading file' });
+  }
+});
+
+
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);

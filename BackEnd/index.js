@@ -139,6 +139,8 @@ app.get('/download/:fileId', async (req, res) => {
 
   try {
     const gfsFiles = conn.collection("fs.files");
+    const gfsChunks = conn.collection("fs.chunks");
+
     // console.log(gfsFiles);
     // const file2 = await gfsFiles.find();
     const file = await gfsFiles.findOne({ filename: fileId });
@@ -146,11 +148,16 @@ app.get('/download/:fileId', async (req, res) => {
       res.status(400).json({success:false});
     }
     console.log(file);
-    res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
-    res.setHeader("Content-Type", file.contentType);
-    console.log("headers sent");
-    gfs.createReadStream({ filename: file.filename }).pipe(res)
-    console.log("sending response");
+    const chunks = gfsChunks.find({});
+
+    console.log("chunks",chunks);
+    // res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
+    // res.setHeader("Content-Type", file.contentType);
+    // console.log("headers sent");
+    // const readstream = gfs.createReadStream({ filename: file.filename });
+    // res.sendFile(file)
+    // gfs.createReadStream({ filename: file.filename }).pipe(res)
+    // console.log("sending response");
     // const file = await File.findById(fileId);
 
     // if (!file) {

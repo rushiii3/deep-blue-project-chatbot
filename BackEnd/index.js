@@ -1,4 +1,5 @@
 require("dotenv").config();
+const production = true;
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
@@ -14,6 +15,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { isAuthenticated } = require("./Middleware/auth");
 const errorThrow = require("./Middleware/ErrorHandler");
+
 cloudinary.config({
   cloud_name: "dmuhioahv",
   api_key: "166273865775784",
@@ -40,7 +42,11 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${
+      !production
+        ? "http://localhost:5173"
+        : "https://deep-blue-project-chatbot.vercel.app"
+    }`,
     credentials: true,
   })
 );
@@ -114,7 +120,6 @@ app.post("/login",async(req,res,next)=>{
 })
 
 app.get("/getuser",isAuthenticated,async(req,res,next)=>{
-  console.log(req.user);
   const userlogin =
     await User.findById(req.user).select(
       "email firstname  lastname _id "

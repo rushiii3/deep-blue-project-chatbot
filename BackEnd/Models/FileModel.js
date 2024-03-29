@@ -7,9 +7,19 @@ const fileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  fileId: {
-    type: mongoose.Types.ObjectId,
+  financial_year:{
+    type: String,
     required: true,
+  },
+  pdf: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   uploadDate: {
     type: Date,

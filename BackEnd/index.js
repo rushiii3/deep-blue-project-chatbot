@@ -1,181 +1,173 @@
 require("dotenv").config();
-const express = require('express');
-const multer = require('multer');
-const { GridFsStorage } = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
-const cors = require('cors');
-const connectDB = require('./db');
-const mongoose = require('mongoose');
-
+const express = require("express");
+const multer = require("multer");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const connectDB = require("./db");
 const app = express();
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
+const File = require("./Models/FileModel");
+const User = require("./Models/UserModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { isAuthenticated } = require("./Middleware/auth");
+const errorThrow = require("./Middleware/ErrorHandler");
+cloudinary.config({
+  cloud_name: "dmuhioahv",
+  api_key: "166273865775784",
+  api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
+  secure: true,
+});
 
+/* The `const storage` variable in the code snippet is creating a configuration object for Multer, a
+middleware for handling file uploads in Node.js. */
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); //location of pdf to save temporary
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); //file saved
+  },
+});
+const upload = multer({ storage: storage });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 // Connect to MongoDB
 connectDB();
-
-// Set up GridFS
-const conn = mongoose.connection;
-
-
-// init gfs
-let gfs;
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-  console.log('GridFS is ready');
-});
-
-// Storage
-const storage = new GridFsStorage({
-  url: process.env.MONGO_URl,
-  file: (req, file) => {
-    return {
-      filename: file.originalname,
-    };
-  },
-});
-
-const upload = multer({ storage });
-
-
-// Set up Multer and GridFS Storage
-
-
-
-
-// Model for file information
-const File = mongoose.model('File', {
-  filename: String,
-  fileId: mongoose.Types.ObjectId,
-});
-
-// Route for file upload
-app.post('/upload', upload.single('pdf'), async (req, res) => {
+// create user
+app.post("/register",async(req,res)=>{
   try {
-    console.log('File uploaded successfully');
-    const data = req.file;
-
-    // Create a record in the File model with file information
-    const newFile = new File({
-      filename: data.originalname,
+    const {email,password} = req.body;
+    const newUser = new User({
+      firstname: 'John',
+      lastname: 'Doe',
+      email: 'admin@gmail.com',
+      password: 'a12345678',
     });
-
-    // Save the file information to MongoDB
-    await newFile.save();
-
-    console.log('File information saved to MongoDB');
-    res.json({ message: 'File uploaded successfully' });
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    res.status(500).json({ error: 'Error uploading file' });
-  }
-});
-
-
-// Route for downloading a file
-// app.get('/download/:filename', (req, res) => {
-//   try {
-//     const { filename } = req.params;
-//     console.log(gfs);
-//     const fileinfo = gfs.files.findOne({ 
-//       _id: mongoose.Types.ObjectId(req.params.filename)
-//       // filename: req.params.filename.toString()
-//     })
-//     console.log(fileinfo);
-//     // // Retrieve the file from GridFS
-//     // const readstream = gfs.createReadStream({ filename });
-
-//     // // Handle errors during streaming
-//     // readstream.on('error', (err) => {
-//     //   console.error('Error during file streaming:', err);
-//     //   res.status(404).json({ error: 'File not found' });
-//     // });
-
-//     // // Stream the file to the response
-//     // readstream.pipe(res);
-//   } catch (error) {
-//     console.error('Error during file download:', error);
-//     res.status(500).json({ error: 'Error during file download' });
-//   }
-// });
-
-app.get('/files', async (req, res) => {
-  try {
-    const files = await File.find();
-    res.json(files);
-  } catch (error) {
-    console.error('Error fetching files:', error);
-    res.status(500).json({ error: 'Error fetching files' });
-  }
-});
-
-app.get('/files/:fileId', async (req, res) => {
-  const { fileId } = req.params;
-  console.log(fileId);
-  try {
-    const file = await File.findById(fileId);
     
-    if (!file) {
-      return res.status(404).json({ error: 'File not found' });
-    }
-
-    res.json(file);
+    // Save the new user to the database
+    newUser.save()
+      .then(savedUser => {
+        console.log('User saved successfully:', savedUser);
+      })
+      .catch(error => {
+        console.error('Error saving user:', error);
+      });
   } catch (error) {
-    console.error('Error fetching file details:', error);
-    res.status(500).json({ error: 'Error fetching file details' });
+    
   }
-});
-
-// Route for downloading a file by fileId
-app.get('/download/:fileId', async (req, res) => {
-  const { fileId } = req.params;
-
+})
+// login route
+app.post("/login",async(req,res,next)=>{
   try {
-    const gfsFiles = conn.collection("fs.files");
-    const gfsChunks = conn.collection("fs.chunks");
-
-    // console.log(gfsFiles);
-    // const file2 = await gfsFiles.find();
-    const file = await gfsFiles.findOne({ filename: fileId });
-    if(!file) {
-      res.status(400).json({success:false});
+    const {email,password} = req.body;
+    if (!email || !password) {
+      errorThrow("Email or password should not be empty", 400);
     }
-    console.log(file);
-    const chunks = gfsChunks.find({});
-
-    console.log("chunks",chunks);
-    // res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
-    // res.setHeader("Content-Type", file.contentType);
-    // console.log("headers sent");
-    // const readstream = gfs.createReadStream({ filename: file.filename });
-    // res.sendFile(file)
-    // gfs.createReadStream({ filename: file.filename }).pipe(res)
-    // console.log("sending response");
-    // const file = await File.findById(fileId);
-
-    // if (!file) {
-    //   return res.status(404).json({ error: 'File not found' });
-    // }
-    // console.log(file.filename);
-    // console.log(gfs.createReadStream);
-    // // Retrieve the file from GridFS using its filename
-    // const readstream = gfs.createReadStream({ filename: file.filename });
-
-    // // Stream the file to the response
-    // readstream.pipe(res);
+    const userlogin = await User.findOne({ email }).select("+password");
+    if (!userlogin) {
+      errorThrow("User doesn't exist!", 404);
+    }
+    const isPasswordValid = await userlogin.comparePassword(password);
+    if (!isPasswordValid) {
+      errorThrow("Please provide the correct information", 401);
+    }
+    const UserToken = jwt.sign(
+      JSON.stringify(userlogin),
+      process.env.JWT_SECRET
+    );
+      
+    const token = UserToken;
+    const options = {
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      httpOnly: false,
+      sameSite: "none",
+      secure: true,
+    };
+    const user = {
+      firstname:userlogin.lastname,
+      lastname:userlogin.firstname,
+      _id:userlogin._id,
+      email:userlogin.email
+    }
+    res.status(201).cookie("token", token, options).json({
+      success: true,
+      user,
+      token,
+    });
   } catch (error) {
-    console.error('Error downloading file:', error);
-    res.status(500).json({ error: 'Error downloading file' });
+    next(error)
+  }
+})
+
+app.get("/getuser",isAuthenticated,async(req,res,next)=>{
+  console.log(req.user);
+  const userlogin =
+    await User.findById(req.user).select(
+      "email firstname  lastname _id "
+    );
+    console.log(userlogin);
+    const user = {
+      firstname:userlogin.firstname,
+      lastname:userlogin.lastname,
+      _id:userlogin._id,
+      email:userlogin.email
+    }
+    res.status(200).json({ success: true, user: user });
+})
+// Route for file upload
+app.post("/upload", upload.single("pdf"), async (req, res) => {
+  try {
+    const { filename, path } = req.file;
+    if (!filename || !path) {
+      errorThrow("Please input PDF", 500);
+    }
+    const result = await cloudinary.uploader.upload(path).catch((error) => {
+      errorThrow(error.message, 500);
+    });
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("removed file");
+    });
+    if (!result) {
+      errorThrow("Failed to upload pdf", 500);
+    }
+    const upload = await File.create({
+      filename: filename,
+      financial_year: "2023-2024",
+      pdf: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+    });
+    if (!upload) {
+      errorThrow("Failed to upload pdf", 500);
+    }
+    res.json({ message: "File uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    errorThrow("Error uploading file", 500);
   }
 });
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
+

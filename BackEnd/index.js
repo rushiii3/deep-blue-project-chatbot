@@ -166,14 +166,6 @@ app.post("/upload", upload.single("pdf"), async (req, res) => {
   }
 });
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
-    message: err.message,
-    stack: process.env.NODE_ENV === "development" ? err.stack : null,
-    statuscode: statusCode,
-  });
-});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);

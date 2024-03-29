@@ -1,8 +1,9 @@
 import React from "react";
+import LoadingBar from 'react-top-loading-bar'
 
 const Loading = () => {
   return (
-    <div>
+    <div className="h-screen flex items-center justify-center">
       <div class="relative flex justify-center items-center">
         <div class="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
         <img

@@ -4,6 +4,7 @@ import Features from '../Component/Landing/Features'
 import Technology from '../Component/Landing/Technology'
 import Teams from '../Component/Landing/Teams'
 import ChatDesign from '../Component/Chatbot/ChatDesign'
+import Footer from '../Component/Layout/Footer'
 
 const LandingPage = () => {
   return (
@@ -13,6 +14,7 @@ const LandingPage = () => {
     <Technology />
     <Teams />
     <ChatDesign />
+    <Footer />
     </>
   )
 }

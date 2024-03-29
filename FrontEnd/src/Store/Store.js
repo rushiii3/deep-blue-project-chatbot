@@ -29,3 +29,11 @@ export const useDarkModeStore = create((set)=>({
         set({ mode: mode });
     }
 }));
+
+
+export const useLoader = create((set)=>({
+    loading:false,
+    setLoading:(isLoading)=>{
+        set({ loading: isLoading });
+    }
+}))

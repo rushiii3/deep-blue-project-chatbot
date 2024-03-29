@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 import Actions from './Actions';
+import axios from 'axios';
 
 const TableView = () => {
+    useEffect(() => {
+    
+    }, [])
+    
   return (
     <Table aria-label="Example static collection table">
       <TableHeader>

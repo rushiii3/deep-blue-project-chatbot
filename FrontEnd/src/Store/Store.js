@@ -3,25 +3,28 @@ import { link } from '../Links';
 import axios from 'axios';
 
 export const useUserStore = create((set) => ({
-  isAuthenticated: false,
-  loading: false,
-  error: null,
-  user: null,
-  loadUser: async () => {
-    try {
-      set({ loading: true });
-      const response = await axios.get(`${link}/getuser`, {
-        withCredentials: true,
-      });
-      set({ isAuthenticated: true, loading: false, user: response.data.user });
-    } catch (error) {
-      set({ loading: false, error: error.message, isAuthenticated: false });
-    }
-  },
-  setUser: (userData) => {
-    set({ user: userData, isAuthenticated: true });
-  },
-}));
+    isAuthenticated: false,
+    loading: true, // Initialize loading as true
+    error: null,
+    user: null,
+    loadUser: async () => {
+      try {
+        const response = await axios.get(`${link}/getuser`, {
+          withCredentials: true,
+        });
+        set({ isAuthenticated: true, user: response.data.user });
+      } catch (error) {
+        set({ error: error.message });
+      } finally {
+        // Set loading to false regardless of success or failure
+        set({ loading: false });
+      }
+    },
+    setUser: (userData) => {
+      set({ user: userData, isAuthenticated: true });
+    },
+  }));
+  
 
 export const useDarkModeStore = create((set)=>({
     mode:false,
@@ -32,8 +35,13 @@ export const useDarkModeStore = create((set)=>({
 
 
 export const useLoader = create((set)=>({
-    loading:false,
-    setLoading:(isLoading)=>{
-        set({ loading: isLoading });
+    loading: false,
+    setLoading: (isLoading) => set({ loading: isLoading }),
+}));
+
+export const useFinanceStore = create((set)=>({
+    FinanceData:null,
+    setFinanceData:(data)=>{
+        set({FinanceData:data});
     }
 }))

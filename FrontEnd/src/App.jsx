@@ -6,51 +6,15 @@ import Navbars from "./Component/Layout/Navbar";
 import Footer from "./Component/Layout/Footer";
 import Loading from "./Component/Loader/Loading";
 import { Toaster } from "react-hot-toast";
-import { useUserStore, useDarkModeStore, useLoader } from "./Store/Store";
-import axios from "axios";
+import { useUserStore, useDarkModeStore } from "./Store/Store";
+import Protected from "./Component/Protection/Protected";
 
 export default function App() {
   const { loadUser } = useUserStore();
   const { mode, setMode } = useDarkModeStore();
-  const { loading, setLoading } = useLoader();
   useEffect(() => {
-    // Set up request interceptor
-    const requestInterceptor = axios.interceptors.request.use(
-      function (config) {
-        // Do something before request is sent
-        if (config.method.toUpperCase() === 'GET') {
-          setLoading(true);
-        }
-        return config;
-      },
-      function (error) {
-        // Do something with request error
-        setLoading(false);
-        return Promise.reject(error);
-      }
-    );
-  
-    // Set up response interceptor
-    const responseInterceptor = axios.interceptors.response.use(
-      function (response) {
-        // Do something with response data
-        setLoading(false);
-        return response;
-      },
-      function (error) {
-        // Do something with response error
-        setLoading(false);
-        return Promise.reject(error);
-      }
-    );
-  
-    // Clean up interceptors on component unmount
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, []); // Run only once on component mount
-  
+    loadUser();
+  }, []);
 
   useEffect(() => {
     // Function to check the preferred color scheme
@@ -73,9 +37,6 @@ export default function App() {
       mediaQueryList.removeEventListener("change", handleChange);
     };
   }, []);
-  useEffect(() => {
-    loadUser();
-  }, []);
 
   return (
     <main className={`${mode ? "dark text-foreground bg-background" : ""}`}>
@@ -90,7 +51,14 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/upload" element={<UploadPage />} />
-            <Route path="/add" element={<AddPdfPage />} />
+            <Route
+              path="/add"
+              element={
+                <Protected>
+                  <AddPdfPage />
+                </Protected>
+              }
+            />
           </Routes>
         </Suspense>
       </Router>

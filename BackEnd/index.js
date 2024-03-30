@@ -15,6 +15,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { isAuthenticated } = require("./Middleware/auth");
 const errorThrow = require("./Middleware/ErrorHandler");
+const { default: mongoose } = require("mongoose");
 
 cloudinary.config({
   cloud_name: "dmuhioahv",
@@ -118,13 +119,12 @@ app.post("/login",async(req,res,next)=>{
     next(error)
   }
 })
-
+// get user
 app.get("/getuser",isAuthenticated,async(req,res,next)=>{
   const userlogin =
     await User.findById(req.user).select(
       "email firstname  lastname _id "
     );
-    console.log(userlogin);
     const user = {
       firstname:userlogin.firstname,
       lastname:userlogin.lastname,
@@ -133,9 +133,22 @@ app.get("/getuser",isAuthenticated,async(req,res,next)=>{
     }
     res.status(200).json({ success: true, user: user });
 })
-// Route for file upload
-app.post("/upload", upload.single("pdf"), async (req, res) => {
+// get finance records
+app.get("/get-data",async(req,res,next)=>{
   try {
+    const data = await File.find({});
+    if (!data) {
+      errorThrow("No data found", 400);
+    }
+    res.status(200).json({ success: true, data: data });
+  } catch (error) {
+    next(error)
+  }
+})
+// Route for file upload
+app.post("/upload", upload.single("pdf[]"), async (req, res) => {
+  try {
+    const {financialYear} = req.body;
     const { filename, path } = req.file;
     if (!filename || !path) {
       errorThrow("Please input PDF", 500);
@@ -155,22 +168,43 @@ app.post("/upload", upload.single("pdf"), async (req, res) => {
     }
     const upload = await File.create({
       filename: filename,
-      financial_year: "2023-2024",
+      financial_year: financialYear,
       pdf: {
         public_id: result.public_id,
         url: result.secure_url,
       },
+      isSelected:false
     });
     if (!upload) {
       errorThrow("Failed to upload pdf", 500);
     }
-    res.json({ message: "File uploaded successfully" });
+    res.json({success:true, message: "File uploaded successfully" , upload });
   } catch (error) {
     console.error("Error uploading file:", error);
     errorThrow("Error uploading file", 500);
   }
 });
+app.delete("/delete/:id",async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    if(!mongoose.isValidObjectId(id)){
+      errorThrow("Please enter a valid id", 400);
+    }
+    const file = await File.findById(id);
+    await cloudinary.uploader
+      .destroy(file.pdf.public_id)
+      .then((result) => console.log(result));
 
+    const deleteData = await File.findByIdAndDelete(id);
+    if(!deleteData){
+      errorThrow("Failed to delete the record", 400);
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+})
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);

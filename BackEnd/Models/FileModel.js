@@ -21,6 +21,10 @@ const fileSchema = new mongoose.Schema({
       required: true,
     },
   },
+  isSelected:{
+    type: Boolean,
+    required: true,
+  },
   uploadDate: {
     type: Date,
     default: Date.now,

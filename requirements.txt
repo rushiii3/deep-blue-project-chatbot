@@ -42,6 +42,7 @@ fqdn==1.5.1
 fsspec==2024.3.1
 gitdb==4.0.11
 GitPython==3.1.42
+gunicorn==21.2.0
 h11==0.14.0
 httpcore==1.0.4
 httplib2==0.22.0
@@ -127,6 +128,7 @@ pydot==2.0.0
 Pygments==2.17.2
 PyMuPDF==1.24.1
 PyMuPDFb==1.24.1
+pynose==1.5.1
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 python-json-logger==2.0.7
@@ -182,4 +184,3 @@ webcolors==1.13
 webencodings==0.5.1
 websocket-client==1.7.0
 Werkzeug==3.0.2
-gunicorn==19.7.1

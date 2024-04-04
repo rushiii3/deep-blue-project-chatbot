@@ -1,0 +1,338 @@
+[
+    {
+        "label": "fitz",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fitz",
+        "description": "fitz",
+        "detail": "fitz",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "spacy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "spacy",
+        "description": "spacy",
+        "detail": "spacy",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "tokenize",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "isExtraImport": true,
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "get_response",
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "isExtraImport": true,
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "nltk",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "nltk",
+        "description": "nltk",
+        "detail": "nltk",
+        "documentation": {}
+    },
+    {
+        "label": "PorterStemmer",
+        "importPath": "nltk.stem.porter",
+        "description": "nltk.stem.porter",
+        "isExtraImport": true,
+        "detail": "nltk.stem.porter",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "get_table_of_contents_page_number",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def get_table_of_contents_page_number(doc):\n    print(f\"total pages :{doc.page_count}\")\n    toc_page_num_array=[]#represents the table of contents(TOC) page number\n    for i in range (0,doc.page_count):\n        current_page= doc.load_page(i)\n        extracted_text=current_page.get_text()\n        #print(f\"current page number:{i}\")\n        #print(extracted_text)\n        regex_table_of_content=r'(table\\s+of\\s+contents)|(contents)|(in\\s+this\\s+)/gi'\n        #There might be multiple table of contents as well in the pdf, so consider all of them to create one single dictionary",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "get_toc_dict_for_pdf",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def get_toc_dict_for_pdf(toc_page_num_array,doc):\n    #a list of created toc dictionaries after all the preprocessing for multiple TOCs in a single pdf\n    toc_dictionaries_array=[]\n    for each_page_number in toc_page_num_array:\n        toc_page_text= doc.load_page(each_page_number).get_text()\n        #print(toc_page_text)\n        # a dict to hold the headings and their page number\n        dict_headings_for_current_pdf={}\n        regex_for_presence_of_digits=r'(\\d+)'\n        preprocessed_text_1=preprocess_step_1(toc_page_text)",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "preprocess_step_1",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def preprocess_step_1(toc_page_text):\n    '''In this step the following preprocessing is performed:-\n    1. The dots from the headings\n    2. The phrases \"table of contents, index, page, contents, etc\" are removed\n    Then the cleaned text is returned\n    '''\n     #split the table of contents page by new line character\n    lines_array= toc_page_text.split('\\n')\n    ###################################################################################################\n    #clean the contents. like removing the dots from the table of contents,etc.",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "preprocess_step_2",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def preprocess_step_2(preprocessed_text_1,regex_for_presence_of_digits):\n    '''\n    The following preprocessing is performed\n    We are trying to find out the sentences which are the table of contents and separate them from any other text present.This is required due to the issue caused by the Abbott pdf.Refer \"pdfs\" directory to see the pdf\n    Steps are:-\n    1.check whether there is a digit in the sentence\n    2. if yes then consider the sentence\n    3. if no then check whether the last sentence contains a digit \n    4. if yes then consider it\n    5. if no , then check whether the next sentence contains the digit, if yes then consider it",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "preprocess_step_3",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):\n    '''\n    Here, after getting the sentences that are part of table of contents, we preprocess them in the following ways\n    1. For sentences that contain a digit,split them using the digit. This is done to identify whether the digit in the sentence is the page number or is part of the heading\n    After splitting them using the digit, these sentences will be analyzed further to determine whether the digit is the page number or not.\n    2. Remove any empty strings that are present in them\n    '''\n    preprocessed_text_array=[]\n    final_preprocessed_text_array=[]\n    #1. iterate over 'cleaned_split_array' elements and split the sentences that contain digits to find the pattern",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "encode_the_pattern_and_determine_the_toc_order",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):\n    '''\n    Here the aim is to find the order in which the heading and the page number are arranged. \n    Possible orders can be :1. Heading......24(page number) or 24....Heading\n    Hence to determine this, we encode the string and the digits\n    Encoding :-  0=> digit,1=> string\n    Then we remove the duplicates by replacing similar consecutive elements with a single value ie. [1,1,1,1,0 ]=>[1,0] (all 1s are replaced with a single one)\n    Then to determine the Order, we consider the last two elements in the list.This is considered to be the represent order accurately. This is based on my observation and may not be accurate for all pdfs, but it works for the currently considered pdf.\n    '''\n    #.find the pattern. 0 => digit,1=> word",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "create_the_toc_dictionary",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):\n    '''\n    Here we create the dictionary that holds the page number and the heading\n    '''\n    dict_headings={}\n    #create the dictionary\n    for index,sentence in enumerate(preprocessed_text_array_3):\n        if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:\n            dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]\n    #all_toc_dicts[pdf]=dict_headings",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "get_response",
+        "kind": 2,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "def get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")\n    resp = get_response(\"hey hello how are youu\")\n    print(resp)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "current_directory",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nfrom utils.nltk_utlis import tokenize\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "parent_directory",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nfrom utils.nltk_utlis import tokenize\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")\n    resp = get_response(\"hey hello how are youu\")",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "hello",
+        "kind": 2,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "extract_pdf",
+        "kind": 2,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "predict",
+        "kind": 2,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "def predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)\n    message = {\"answer\": response}\n    return jsonify(message)\nif __name__ == '__main__':\n    app.run(debug=True)",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "current_directory",
+        "kind": 5,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "current_directory = os.getcwd() \n# Get parent directory\nparent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "parent_directory",
+        "kind": 5,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "render.app",
+        "description": "render.app",
+        "peekOfCode": "app = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")",
+        "detail": "render.app",
+        "documentation": {}
+    },
+    {
+        "label": "tokenize",
+        "kind": 2,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "def tokenize(sentence):\n    return nltk.word_tokenize(sentence)\n# Stemming Function: Reduce each word to its word stem or root form\ndef stem(word):\n    # Convert word to lowercase and stem it using Porter Stemmer\n    return stemmer.stem(word.lower())\n# Bag of Words Function: Generates a binary vector representing presence/absence of words\ndef bag_of_words(tokenized_sentence, words):\n    # Stem each word in the tokenized sentence\n    stemmed = [stem(word) for word in tokenized_sentence]",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "stem",
+        "kind": 2,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "def stem(word):\n    # Convert word to lowercase and stem it using Porter Stemmer\n    return stemmer.stem(word.lower())\n# Bag of Words Function: Generates a binary vector representing presence/absence of words\ndef bag_of_words(tokenized_sentence, words):\n    # Stem each word in the tokenized sentence\n    stemmed = [stem(word) for word in tokenized_sentence]\n    # Initialize bag of words vector with zeros\n    bag = np.zeros(len(words), dtype=np.float32)\n    # Iterate through each word in the vocabulary",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "bag_of_words",
+        "kind": 2,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "def bag_of_words(tokenized_sentence, words):\n    # Stem each word in the tokenized sentence\n    stemmed = [stem(word) for word in tokenized_sentence]\n    # Initialize bag of words vector with zeros\n    bag = np.zeros(len(words), dtype=np.float32)\n    # Iterate through each word in the vocabulary\n    for idx, w in enumerate(words):\n        # Check if stemmed word is present in the tokenized sentence\n        if w in stemmed:\n            # If present, set the corresponding index in bag to 1",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "stemmer",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "stemmer = PorterStemmer()\n# Download necessary NLTK data (word tokenizer) for tokenization\nnltk.download('punkt')\n# Tokenization Function: Splits a sentence into a list of words\ndef tokenize(sentence):\n    return nltk.word_tokenize(sentence)\n# Stemming Function: Reduce each word to its word stem or root form\ndef stem(word):\n    # Convert word to lowercase and stem it using Porter Stemmer\n    return stemmer.stem(word.lower())",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "sentence",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "sentence = \"The quick brown fox jumps over the lazy dog\"\nwords = [\"quick\", \"brown\", \"fox\", \"jumps\", \"over\", \"lazy\", \"dog\", \"apple\", \"banana\", \"cherry\"]\n# Tokenize the sentence\ntokenized_sentence = tokenize(sentence)\nprint(\"Tokenized sentence:\", tokenized_sentence)\n# Stem each word in the tokenized sentence\nstemmed_words = [stem(word) for word in tokenized_sentence]\nprint(\"Stemmed words:\", stemmed_words)\n# Generate bag-of-words representation\nbag_of_words_vector = bag_of_words(tokenized_sentence, words)",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "words",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "words = [\"quick\", \"brown\", \"fox\", \"jumps\", \"over\", \"lazy\", \"dog\", \"apple\", \"banana\", \"cherry\"]\n# Tokenize the sentence\ntokenized_sentence = tokenize(sentence)\nprint(\"Tokenized sentence:\", tokenized_sentence)\n# Stem each word in the tokenized sentence\nstemmed_words = [stem(word) for word in tokenized_sentence]\nprint(\"Stemmed words:\", stemmed_words)\n# Generate bag-of-words representation\nbag_of_words_vector = bag_of_words(tokenized_sentence, words)\nprint(\"Bag of words vector:\", bag_of_words_vector)",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "tokenized_sentence",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "tokenized_sentence = tokenize(sentence)\nprint(\"Tokenized sentence:\", tokenized_sentence)\n# Stem each word in the tokenized sentence\nstemmed_words = [stem(word) for word in tokenized_sentence]\nprint(\"Stemmed words:\", stemmed_words)\n# Generate bag-of-words representation\nbag_of_words_vector = bag_of_words(tokenized_sentence, words)\nprint(\"Bag of words vector:\", bag_of_words_vector)",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "stemmed_words",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "stemmed_words = [stem(word) for word in tokenized_sentence]\nprint(\"Stemmed words:\", stemmed_words)\n# Generate bag-of-words representation\nbag_of_words_vector = bag_of_words(tokenized_sentence, words)\nprint(\"Bag of words vector:\", bag_of_words_vector)",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "bag_of_words_vector",
+        "kind": 5,
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "peekOfCode": "bag_of_words_vector = bag_of_words(tokenized_sentence, words)\nprint(\"Bag of words vector:\", bag_of_words_vector)",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    }
+]

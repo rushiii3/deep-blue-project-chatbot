@@ -255,7 +255,9 @@ def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_p
 ######################################################################################################################################################################
 
 '''
-directory="/home/aadityapal/Projects/DeepBlue/deep-blue-project-chatbot/PDFExtraction/pdfs"
+print(os.getcwd())
+
+directory= os.getcwd()+"/pdfs"
 all_pdfs=os.listdir(directory)
 print(all_pdfs)
 all_toc_dicts={}

@@ -53,6 +53,32 @@
         "documentation": {}
     },
     {
+        "label": "nltk",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "nltk",
+        "description": "nltk",
+        "detail": "nltk",
+        "documentation": {}
+    },
+    {
+        "label": "PorterStemmer",
+        "importPath": "nltk.stem.porter",
+        "description": "nltk.stem.porter",
+        "isExtraImport": true,
+        "detail": "nltk.stem.porter",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
         "label": "Flask",
         "importPath": "flask",
         "description": "flask",
@@ -82,32 +108,6 @@
         "description": "main.chat",
         "isExtraImport": true,
         "detail": "main.chat",
-        "documentation": {}
-    },
-    {
-        "label": "nltk",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "nltk",
-        "description": "nltk",
-        "detail": "nltk",
-        "documentation": {}
-    },
-    {
-        "label": "PorterStemmer",
-        "importPath": "nltk.stem.porter",
-        "description": "nltk.stem.porter",
-        "isExtraImport": true,
-        "detail": "nltk.stem.porter",
-        "documentation": {}
-    },
-    {
-        "label": "numpy",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "numpy",
-        "description": "numpy",
-        "detail": "numpy",
         "documentation": {}
     },
     {
@@ -201,60 +201,6 @@
         "documentation": {}
     },
     {
-        "label": "hello",
-        "kind": 2,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
-        "label": "extract_pdf",
-        "kind": 2,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
-        "label": "predict",
-        "kind": 2,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "def predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)\n    message = {\"answer\": response}\n    return jsonify(message)\nif __name__ == '__main__':\n    app.run(debug=True)",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
-        "label": "current_directory",
-        "kind": 5,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "current_directory = os.getcwd() \n# Get parent directory\nparent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
-        "label": "parent_directory",
-        "kind": 5,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
-        "label": "app",
-        "kind": 5,
-        "importPath": "render.app",
-        "description": "render.app",
-        "peekOfCode": "app = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")",
-        "detail": "render.app",
-        "documentation": {}
-    },
-    {
         "label": "tokenize",
         "kind": 2,
         "importPath": "utils.nltk_utlis",
@@ -333,6 +279,60 @@
         "description": "utils.nltk_utlis",
         "peekOfCode": "bag_of_words_vector = bag_of_words(tokenized_sentence, words)\nprint(\"Bag of words vector:\", bag_of_words_vector)",
         "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "hello",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "extract_pdf",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "predict",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)\n    message = {\"answer\": response}\n    return jsonify(message)\nif __name__ == '__main__':\n    app.run(debug=True)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "current_directory",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "current_directory = os.getcwd() \n# Get parent directory\nparent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "parent_directory",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")",
+        "detail": "app",
         "documentation": {}
     }
 ]

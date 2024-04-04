@@ -182,3 +182,4 @@ webcolors==1.13
 webencodings==0.5.1
 websocket-client==1.7.0
 Werkzeug==3.0.2
+gunicorn==19.7.1

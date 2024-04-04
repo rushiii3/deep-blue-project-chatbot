@@ -34,7 +34,6 @@ def get_table_of_contents_page_number(doc):
     return toc_page_num_array
 
 
-    
 #2. Get the Dictonary with the headings of the Table Of Contents
 def get_toc_dict_for_pdf(toc_page_num_array,doc):
 
@@ -80,7 +79,8 @@ def get_toc_dict_for_pdf(toc_page_num_array,doc):
             print(f"no headings present")
         '''
 
-#1. 
+
+#3. 
 def preprocess_step_1(toc_page_text):
     '''In this step the following preprocessing is performed:-
     1. The dots from the headings
@@ -106,7 +106,7 @@ def preprocess_step_1(toc_page_text):
                 if word.strip() !="." and word !=" ":
                     cleaned_sentence_arr.append(word.strip())
         
-            print(cleaned_sentence_arr)
+            #print(cleaned_sentence_arr)
             joined_cleaned_sentence= ' '.join(cleaned_sentence_arr)
             if len(cleaned_sentence_arr)>0:
                 cleaned_table_of_contents.append(joined_cleaned_sentence)
@@ -117,7 +117,7 @@ def preprocess_step_1(toc_page_text):
     ###################################################################################################
 
 
-#2. 
+#4. 
 def preprocess_step_2(preprocessed_text_1,regex_for_presence_of_digits):
     '''
     The following preprocessing is performed
@@ -159,7 +159,7 @@ def preprocess_step_2(preprocessed_text_1,regex_for_presence_of_digits):
     return preprocessed_text_array
 
     
-#3.
+#5.
 def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):
     '''
     Here, after getting the sentences that are part of table of contents, we preprocess them in the following ways
@@ -192,7 +192,7 @@ def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):
     return final_preprocessed_text_array
 
 
-#4.
+#6.
 def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
     '''
     Here the aim is to find the order in which the heading and the page number are arranged. 
@@ -210,7 +210,7 @@ def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
             toc_pattern.append(0)
         else:
             toc_pattern.append(1)
-    print(toc_pattern)
+    #print(toc_pattern)
     
     
     cleaned_toc_pattern=[]
@@ -233,7 +233,7 @@ def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
         return None
 
 
-#5. 
+#7. 
 def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):
 
     '''
@@ -243,10 +243,177 @@ def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_p
     #create the dictionary
     for index,sentence in enumerate(preprocessed_text_array_3):
         if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:
-            dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]
+
+            #add the page number as the key and the heading as the value
+
+            if actual_order_array[0]==0:
+                dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]
+            else:
+                dict_headings[preprocessed_text_array_3[index+1]]=preprocessed_text_array_3[index]
+
     #all_toc_dicts[pdf]=dict_headings
-    print(dict_headings)
+    #print(dict_headings)
     return dict_headings
+
+#8.calculate the offset (pdf page number on which topic is present versus the page number given in the TOC
+def calculate_offset(toc_dict_array, doc,toc_page_num):
+   #go through each page and then check for the word on that page
+   for toc_dict in toc_dict_array:
+    all_headings_status_dict={}
+
+    #iterate over the dictionary
+    for page_num,heading in toc_dict.items():
+        #print(page_num, heading)
+        all_headings_status_dict[heading]={"toc_page_num":page_num,"pdf_page_num":[],"offset":0}
+        regex_for_current_heading=r''+heading+'\s*\n'
+       # print(f"regex is :{regex_for_current_heading}")
+            
+        for each_page in range(0,doc.page_count):
+            #print(f"toc page num is {toc_page_num_array} and each page is:{each_page}")
+            
+            if each_page not in toc_page_num_array:
+                #print("each page is not equal to toc page num")
+                current_page= doc.load_page(each_page)
+                current_page_text= current_page.get_text()
+                if re.findall(regex_for_current_heading,current_page_text):
+                    all_headings_status_dict[heading]["pdf_page_num"].append(each_page)
+        print()
+
+    #print(all_headings_status_dict)
+
+    #calculate the offset
+    for headings,page_numbers in all_headings_status_dict.items():
+        toc_page_num= page_numbers["toc_page_num"]
+        pdf_page_num= page_numbers["pdf_page_num"]
+        offset=page_numbers["offset"]
+        #if there are multiple pages on which the heading is present, then loop through each page and select the closet one to the page number present in the Table of Contents
+        if len(pdf_page_num)>1:
+            difference= -1
+            selected_pdf_page_num= pdf_page_num[0]
+            for each_pdf_page_num in pdf_page_num:
+                if int(toc_page_num)> int(each_pdf_page_num):
+                    continue
+                else:
+                    current_difference= int(toc_page_num)- int(each_pdf_page_num)
+                    if current_difference >difference:
+                        selected_pdf_page_num=each_pdf_page_num
+                        difference= current_difference
+
+                    
+            #print(f"selected pdf page num is:{selected_pdf_page_num}")
+            page_numbers["pdf_page_num"]=[selected_pdf_page_num]
+
+            #calculate the offset and store it
+            page_numbers["offset"]=int(selected_pdf_page_num)-int(toc_page_num)
+
+        elif len(pdf_page_num)==0:
+            continue
+        else:
+            offset=int(pdf_page_num[0])-int(toc_page_num)
+            #print(f"when only one pdf page num is present, offset is {offset}")
+            page_numbers["offset"]=offset
+
+    #print(all_headings_status_dict)
+    fixed_offset_dict= fix_offset_issues(all_headings_status_dict)
+
+    #print(f"fixed offset issues {fixed_offset_dict}")
+    all_headings_status_dict= fixed_offset_dict
+    print()
+    #print(f"after fixing the offsets")
+    #print(all_headings_status_dict)   
+    return all_headings_status_dict 
+
+#9.
+def fix_offset_issues(all_headings_status_dict):
+    #find the offset that appears most often
+    offset_count_dict={}
+    for headings,page_numbers in all_headings_status_dict.items():
+        offset=page_numbers["offset"]
+
+        if offset in offset_count_dict.keys():
+            offset_count_dict[offset]+=1
+        else:
+            offset_count_dict[offset]=1
+    
+    offset_with_max_count=list(offset_count_dict.keys())[0]
+
+    max_count=offset_count_dict[offset_with_max_count]
+
+    #apply the offset that apppears most often
+    for offset, count in offset_count_dict.items():
+        if count> max_count:
+            offset_with_max_count= count
+            offset_with_max_count=offset
+    
+    for headings, page_numbers in all_headings_status_dict.items():
+        page_numbers["offset"]=offset_with_max_count
+    
+    return all_headings_status_dict
+    
+#10.
+def extract_subheadings_and_their_text(doc,all_headings_status_dict):
+    modified_all_headings_status_dict= determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict)  
+
+    #now extract the text within each subheading
+    for headings, page_numbers in modified_all_headings_status_dict.items():
+        #print(f"heading:{headings}, starting page number:{page_numbers["starting_page_num"]}, ending page number:{page_numbers["ending_page_num"]}")
+        text_within_subheading=extract_text(doc,page_numbers["starting_page_num"], page_numbers["ending_page_num"])
+        #print(f"heading:{headings}, text:{text_within_subheading}")
+
+#11.
+def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict):
+
+    modified_all_headings_status_dict= all_headings_status_dict
+    #go to the page with the headings and extract the text until the next heading
+    for index,(headings,page_numbers) in enumerate(all_headings_status_dict.items()):
+
+        #when we reach to the last ending, there is no heading after it hence dont increment the index
+        if index < len(list(all_headings_status_dict.keys()))-1:
+            next_heading_index=index+1
+
+            #assumption that each new heading starts at a new page
+            text_within_heading_starts_at_page= int(page_numbers["toc_page_num"])+ int(page_numbers["offset"])
+            next_heading=list(all_headings_status_dict.keys())[next_heading_index]
+            text_within_heading_ends_at_page=int(all_headings_status_dict[next_heading]["toc_page_num"])+ int(page_numbers["offset"])-1
+            modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
+            modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
+
+            #print(f"heading is :{headings}. It starts at page:{text_within_heading_starts_at_page} and ends at Page:{text_within_heading_ends_at_page}")
+
+        else:
+            next_heading_index=None
+            text_within_heading_starts_at_page= int(page_numbers["toc_page_num"])+ int(page_numbers["offset"])
+            text_within_heading_ends_at_page=doc.page_count
+            #print(f"heading is :{headings}. It starts at page:{text_within_heading_starts_at_page} and ends at Page:{text_within_heading_ends_at_page}")
+
+            modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
+
+            modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
+    print(modified_all_headings_status_dict)
+    return modified_all_headings_status_dict
+
+#12.
+def extract_text(doc,starting_page_num, ending_page_num):
+    all_pages_extracted_text=""
+    #print(f"starting page number:{starting_page_num}, ending page number:{ending_page_num}")
+    for page_num in range(starting_page_num, ending_page_num):
+        print(page_num)
+        current_page=doc.load_page(page_num)
+        current_page_extracted_text=current_page.get_text()
+        all_pages_extracted_text+=current_page_extracted_text
+    return all_pages_extracted_text
+
+#13. extract sub-headings from the given text
+def extract_subheadings(doc,text):
+    text_split_by_line_array=text.split("\n")
+
+    for sentence in text_split_by_line_array:
+        #TODO: Continue from here
+
+
+        
+
+         
 
 
 ''' 
@@ -255,7 +422,7 @@ def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_p
 ######################################################################################################################################################################
 
 '''
-directory="/home/aadityapal/Projects/DeepBlue/deep-blue-project-chatbot/PDFExtraction/pdfs"
+directory="../PDFExtraction/pdfs"
 all_pdfs=os.listdir(directory)
 print(all_pdfs)
 all_toc_dicts={}
@@ -267,14 +434,24 @@ doc=fitz.open(os.path.join(directory,all_pdfs[0]))
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict
 #doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")
-toc_page_num=get_table_of_contents_page_number(doc)
-dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)
+toc_page_num_array=get_table_of_contents_page_number(doc)
+dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
 
 if(dict_for_current_pdf !=None):
     print("DICTIONARY FOR CURRENT PDF IS\n")
     print(dict_for_current_pdf)
 
+    #get the pdf page number along with the Table of Contents Page number
+    headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
 
+    #go to the pages with the headings and extract subheadings
+    extract_subheadings_and_their_text(doc,headings_status_dict)
+
+
+else:
+    print("no table of contents present for the pdf")
+
+#Calculate the offset
 '''
 #All PDFs testing
 for pdf in all_pdfs:

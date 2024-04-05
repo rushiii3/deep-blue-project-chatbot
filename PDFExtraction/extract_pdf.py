@@ -2,6 +2,9 @@ import fitz
 import re
 import spacy
 import os
+import requests #
+import random
+import string
 nlp=spacy.load("en_core_web_sm")
 
 ''' 
@@ -258,24 +261,57 @@ def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_p
 print(os.getcwd())
 
 directory= os.getcwd()+"/pdfs"
-all_pdfs=os.listdir(directory)
-print(all_pdfs)
-all_toc_dicts={}
+# all_pdfs=os.listdir(directory)
+# print(all_pdfs)
+# all_toc_dicts={}
+
+
+
 
 
 #Single PDFs testing
-doc=fitz.open(os.path.join(directory,all_pdfs[0]))
+# doc=fitz.open(os.path.join(directory,all_pdfs[0]))
+# doc=fitz.open("https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf")
+
+# print("DOCCC\n")
+# print(doc)
 #doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict
 #doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")
-toc_page_num=get_table_of_contents_page_number(doc)
-dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)
+# toc_page_num=get_table_of_contents_page_number(doc)
+# dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)
 
-if(dict_for_current_pdf !=None):
-    print("DICTIONARY FOR CURRENT PDF IS\n")
-    print(dict_for_current_pdf)
+# if(dict_for_current_pdf !=None):
+#     print("DICTIONARY FOR CURRENT PDF IS\n")
+#     print(dict_for_current_pdf)
+def generate_random_name(length=8):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for _ in range(length))
 
+def get_pdf_from_url(url):
+    print(url)
+    response = requests.get(url)
+    if response.status_code == 200:
+        directory = os.getcwd() + "/PDFExtraction/pdfs"
+        print(directory)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        filename = os.path.join(directory, generate_random_name()+".pdf")
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+        extract_data_from_pdf(filename)
+    else:
+        print("Failed to download PDF. Status code:", response.status_code)
+
+def extract_data_from_pdf(pdf_path):
+    print(pdf_path)
+    doc=fitz.open(pdf_path)
+    toc_page_num=get_table_of_contents_page_number(doc)
+    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)
+    if(dict_for_current_pdf !=None):
+        print("DICTIONARY FOR CURRENT PDF IS\n")
+        print(dict_for_current_pdf)
 
 '''
 #All PDFs testing

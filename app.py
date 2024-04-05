@@ -1,18 +1,18 @@
 from flask import Flask, jsonify, request
-import sys
-import os
+# import sys
+# import os
 
-# Get current working directory
-current_directory = os.getcwd() 
-# Get parent directory
-parent_directory = os.path.dirname(current_directory)
-# Append parent directory to sys.path to access modules from the parent directory
-sys.path.append(parent_directory+'/')
+# # Get current working directory
+# current_directory = os.getcwd() 
+# # Get parent directory
+# parent_directory = os.path.dirname(current_directory)
+# # Append parent directory to sys.path to access modules from the parent directory
+# sys.path.append(parent_directory+'/')
 
 
 # get_response is accessed from the chat folder
 from main.chat import get_response
-
+from PDFExtraction.extract_pdf import get_pdf_from_url
 app = Flask(__name__)
 
 
@@ -26,6 +26,7 @@ def hello():
 def extract_pdf():
     print("yeee")
     url = request.get_json().get("url")
+    get_pdf_from_url(url)
     message = {"message": "Your url reached!!","url":url}
     return jsonify(message)
 

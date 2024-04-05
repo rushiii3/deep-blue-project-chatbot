@@ -36,6 +36,33 @@
         "documentation": {}
     },
     {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "string",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "string",
+        "description": "string",
+        "detail": "string",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
@@ -111,6 +138,14 @@
         "documentation": {}
     },
     {
+        "label": "get_pdf_from_url",
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "isExtraImport": true,
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
         "label": "get_table_of_contents_page_number",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
@@ -170,6 +205,33 @@
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
         "peekOfCode": "def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):\n    '''\n    Here we create the dictionary that holds the page number and the heading\n    '''\n    dict_headings={}\n    #create the dictionary\n    for index,sentence in enumerate(preprocessed_text_array_3):\n        if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:\n            dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]\n    #all_toc_dicts[pdf]=dict_headings",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "generate_random_name",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def generate_random_name(length=8):\n    letters = string.ascii_lowercase\n    return ''.join(random.choice(letters) for _ in range(length))\ndef get_pdf_from_url(url):\n    print(url)\n    response = requests.get(url)\n    if response.status_code == 200:\n        directory = os.getcwd() + \"/PDFExtraction/pdfs\"\n        print(directory)\n        if not os.path.exists(directory):",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "get_pdf_from_url",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def get_pdf_from_url(url):\n    print(url)\n    response = requests.get(url)\n    if response.status_code == 200:\n        directory = os.getcwd() + \"/PDFExtraction/pdfs\"\n        print(directory)\n        if not os.path.exists(directory):\n            os.makedirs(directory)\n        filename = os.path.join(directory, generate_random_name()+\".pdf\")\n        with open(filename, 'wb') as f:",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_data_from_pdf",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_data_from_pdf(pdf_path):\n    print(pdf_path)\n    doc=fitz.open(pdf_path)\n    toc_page_num=get_table_of_contents_page_number(doc)\n    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)\n    if(dict_for_current_pdf !=None):\n        print(\"DICTIONARY FOR CURRENT PDF IS\\n\")\n        print(dict_for_current_pdf)\n'''\n#All PDFs testing",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -286,7 +348,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction",
+        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    get_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)",
         "detail": "app",
         "documentation": {}
     },
@@ -295,7 +357,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)",
+        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    get_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")",
         "detail": "app",
         "documentation": {}
     },
@@ -305,24 +367,6 @@
         "importPath": "app",
         "description": "app",
         "peekOfCode": "def predict():\n    text = request.get_json().get(\"message\")\n    response = get_response(text)\n    message = {\"answer\": response}\n    return jsonify(message)\nif __name__ == '__main__':\n    app.run(debug=True)",
-        "detail": "app",
-        "documentation": {}
-    },
-    {
-        "label": "current_directory",
-        "kind": 5,
-        "importPath": "app",
-        "description": "app",
-        "peekOfCode": "current_directory = os.getcwd() \n# Get parent directory\nparent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])",
-        "detail": "app",
-        "documentation": {}
-    },
-    {
-        "label": "parent_directory",
-        "kind": 5,
-        "importPath": "app",
-        "description": "app",
-        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\n# Append parent directory to sys.path to access modules from the parent directory\nsys.path.append(parent_directory+'/')\n# get_response is accessed from the chat folder\nfrom main.chat import get_response\napp = Flask(__name__)\n# Define a sample route for your API\n@app.route('/api/hello', methods=['GET'])\ndef hello():\n    return jsonify({'message': 'Hello, World!'})",
         "detail": "app",
         "documentation": {}
     },

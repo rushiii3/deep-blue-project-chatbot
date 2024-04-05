@@ -2,6 +2,7 @@ import fitz
 import re
 import spacy
 import os
+from pprint import pprint 
 nlp=spacy.load("en_core_web_sm")
 
 ''' 
@@ -53,11 +54,13 @@ def get_toc_dict_for_pdf(toc_page_num_array,doc):
         preprocessed_text_1=preprocess_step_1(toc_page_text)
         preprocessed_text_array_2= preprocess_step_2(preprocessed_text_1,regex_for_presence_of_digits) 
         preprocessed_text_array_3= preprocess_step_3(preprocessed_text_array_2,regex_for_presence_of_digits)
+
         toc_order=encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3)
-    
+
         if(toc_order!=None):
             (toc_pattern,actual_order_array)=toc_order
             dict_headings_for_current_pdf=create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern)
+            
     
             #add the dictonary to all dictonaries list
             toc_dictionaries_array.append(dict_headings_for_current_pdf)
@@ -168,9 +171,10 @@ def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):
     2. Remove any empty strings that are present in them
     '''
 
-    
     preprocessed_text_array=[]
     final_preprocessed_text_array=[]
+    temp_preprocessed_text_array=[]
+    temp_preprocessed_text_array_2=[]
     
     #1. iterate over 'cleaned_split_array' elements and split the sentences that contain digits to find the pattern
     for index,sentence in enumerate(preprocessed_text_2):
@@ -180,7 +184,7 @@ def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):
             preprocessed_text_array.extend(split_sentence)
         else:
             preprocessed_text_array.append(sentence)
-    print()
+
     #print(new_cleaned_split_array)
 
     
@@ -188,11 +192,104 @@ def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):
     for sentence in preprocessed_text_array:
         if sentence!="" and sentence!=" " and sentence!=None and sentence!=".":
             final_preprocessed_text_array.append(sentence)
-    print()
+    
+    #3. if there are consecutive strings then merge them into one.
+
+    temp_preprocessed_text_array.extend(final_preprocessed_text_array)
+
+    while(check_whether_consecutive_sentences_are_present(temp_preprocessed_text_array)):
+        merged_array= merge_consecutive_sentences_into_one(temp_preprocessed_text_array)
+        temp_preprocessed_text_array.clear()
+        temp_preprocessed_text_array.extend(merged_array)
+    final_preprocessed_text_array.clear()
+    final_preprocessed_text_array.extend(temp_preprocessed_text_array)
+
+    #4. Extract only the heading and remove all the words like "Part, Item,etc"
+    temp_preprocessed_text_array_2=extract_only_valid_words_from_headings(final_preprocessed_text_array)
+    final_preprocessed_text_array.clear()
+    final_preprocessed_text_array.extend(temp_preprocessed_text_array_2)
+    print(f"preprocessed output stage 3 is:{final_preprocessed_text_array}")
+
     return final_preprocessed_text_array
+
+#6.
+def extract_only_valid_words_from_headings(preprocessed_text_array_3):
+    final_preprocessed_text_array=[]
+    for sentence in preprocessed_text_array_3:
+        
+        regex_to_remove_unnecessary_words=r'^([\w\s]+[\da-zA-Z]+\.)'
+
+        part_of_sentence_to_remove=re.findall(regex_to_remove_unnecessary_words,sentence)
+        split_sentence=re.split(regex_to_remove_unnecessary_words,sentence)
+
+        for part in split_sentence:
+            if part!="" and not re.findall(regex_to_remove_unnecessary_words,part):
+                final_preprocessed_text_array.append(part.strip())
+    return final_preprocessed_text_array
+        
+        
+
 
 
 #6.
+def check_whether_consecutive_sentences_are_present(preproccessed_text_array_3):
+    value_to_return=False
+    for index,sentences in enumerate(preproccessed_text_array_3):
+        if index< len(preproccessed_text_array_3)-1:
+            if not preproccessed_text_array_3[index].isdigit() and not preproccessed_text_array_3[index+1].isdigit():
+                value_to_return=True
+                break
+            else:
+                value_to_return= False
+    return value_to_return
+
+#7.
+def merge_consecutive_sentences_into_one(preprocessed_text_array_3):
+    temp_preprocessed_text_array=[]
+
+    index_to_skip=[]
+    for index,sentence in enumerate(preprocessed_text_array_3):
+        #check until 2nd last index else index out of range error will be thrown because we are using (index+1)
+        if index <len(preprocessed_text_array_3)-1:
+            
+            #if this index has already been merged
+            if index in index_to_skip:
+                continue
+            #consecutive strings are present
+            elif not preprocessed_text_array_3[index].isdigit() and not preprocessed_text_array_3[index+1].isdigit():
+                #print(f"consecutive strings are present . string 1 :{final_preprocessed_text_array[index]}, String 2:{final_preprocessed_text_array[index+1]}")
+                temp_preprocessed_text_array.append(preprocessed_text_array_3[index]+ " "+ preprocessed_text_array_3[index+1])
+                index_to_skip.append(index+1)
+            elif not preprocessed_text_array_3[index].isdigit() and not preprocessed_text_array_3[index-1].isdigit():
+                previous_string_is=temp_preprocessed_text_array[len(temp_preprocessed_text_array)-1]
+                temp_preprocessed_text_array[len(temp_preprocessed_text_array)-1]= previous_string_is + " " +preprocessed_text_array_3[index]
+            else:
+                temp_preprocessed_text_array.append(sentence)
+
+        #last index
+        elif index== len(preprocessed_text_array_3)-1:
+            if not preprocessed_text_array_3[index].isdigit() and not preprocessed_text_array_3[index-1].isdigit():
+                previous_string_is=temp_preprocessed_text_array[len(temp_preprocessed_text_array)-1]
+                temp_preprocessed_text_array[len(temp_preprocessed_text_array)-1]= previous_string_is + " " +preprocessed_text_array_3[index]
+            else:
+                temp_preprocessed_text_array.append(sentence)
+
+    return temp_preprocessed_text_array
+
+
+#8.
+def encode_the_pattern(preprocessed_text_array_3):
+    #.find the pattern. 0 => digit,1=> word
+    pattern=[]
+    for index, sentence in enumerate(preprocessed_text_array_3):
+        if sentence.isdigit():
+            pattern.append(0)
+        else:
+            pattern.append(1)
+    return pattern
+
+
+#9.
 def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
     '''
     Here the aim is to find the order in which the heading and the page number are arranged. 
@@ -203,14 +300,17 @@ def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
     Then to determine the Order, we consider the last two elements in the list.This is considered to be the represent order accurately. This is based on my observation and may not be accurate for all pdfs, but it works for the currently considered pdf.
     
     '''
+
+    
     #.find the pattern. 0 => digit,1=> word
+    '''
     toc_pattern=[]
     for sentence in preprocessed_text_array_3:
         if sentence.strip().isdigit():
             toc_pattern.append(0)
         else:
             toc_pattern.append(1)
-    #print(toc_pattern)
+    print(f"TOC pattern is :{toc_pattern}")
     
     
     cleaned_toc_pattern=[]
@@ -219,21 +319,23 @@ def encode_the_pattern_and_determine_the_toc_order(preprocessed_text_array_3):
             cleaned_toc_pattern.append(element)
         elif toc_pattern[index-1]!=element:
             cleaned_toc_pattern.append(element)
-    print(cleaned_toc_pattern)
-    
+    print(f"cleaned TOC pattern is:{cleaned_toc_pattern}")
+    '''
+    encoded_pattern= encode_the_pattern(preprocessed_text_array_3)
+    #print(f"TOC pattern is:{encoded_pattern}, len is :{len(encoded_pattern)}, len of text array is:{len(preprocessed_text_array_3)}")
     
     #check the ending element in the cleaned toc pattern. This signifies whether the ending element is string or digit and assumption is that it is correct ie. if its a digit here it means that it is a page number in the pdf as well
     #the last pair of elements is the actual order
 
-    if len(cleaned_toc_pattern)>=2:
-        actual_order_array=[cleaned_toc_pattern[-2], cleaned_toc_pattern[-1]]
-        print(actual_order_array)
-        return (toc_pattern,actual_order_array)
+    if len(encoded_pattern)>=2:
+        actual_order_array=[encoded_pattern[-2], encoded_pattern[-1]]
+        #print(actual_order_array)
+        return (encoded_pattern,actual_order_array)
     else:
         return None
 
 
-#7. 
+#10. 
 def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):
 
     '''
@@ -242,27 +344,30 @@ def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_p
     dict_headings={}
     #create the dictionary
     for index,sentence in enumerate(preprocessed_text_array_3):
-        if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:
+        if(index <len(preprocessed_text_array_3)-1):
 
-            #add the page number as the key and the heading as the value
-
-            if actual_order_array[0]==0:
-                dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]
-            else:
-                dict_headings[preprocessed_text_array_3[index+1]]=preprocessed_text_array_3[index]
+            #print(f"toc_pattern at current index is:{toc_pattern[index]} and at next index is :{toc_pattern[index+1]}")
+        
+            if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:
+                #add the TOC heading as the key and the heading as the value
+                if actual_order_array[0]==0:
+                    dict_headings[preprocessed_text_array_3[index+1]]=preprocessed_text_array_3[index]
+                else:
+                    
+                    dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]
 
     #all_toc_dicts[pdf]=dict_headings
     #print(dict_headings)
     return dict_headings
 
-#8.calculate the offset (pdf page number on which topic is present versus the page number given in the TOC
+#11.calculate the offset (pdf page number on which topic is present versus the page number given in the TOC
 def calculate_offset(toc_dict_array, doc,toc_page_num):
    #go through each page and then check for the word on that page
    for toc_dict in toc_dict_array:
     all_headings_status_dict={}
 
     #iterate over the dictionary
-    for page_num,heading in toc_dict.items():
+    for heading,page_num in toc_dict.items():
         #print(page_num, heading)
         all_headings_status_dict[heading]={"toc_page_num":page_num,"pdf_page_num":[],"offset":0}
         regex_for_current_heading=r''+heading+'\s*\n'
@@ -277,12 +382,12 @@ def calculate_offset(toc_dict_array, doc,toc_page_num):
                 current_page_text= current_page.get_text()
                 if re.findall(regex_for_current_heading,current_page_text):
                     all_headings_status_dict[heading]["pdf_page_num"].append(each_page)
-        print()
+        #print()
 
     #print(all_headings_status_dict)
 
     #calculate the offset
-    for headings,page_numbers in all_headings_status_dict.items():
+    for heading,page_numbers in all_headings_status_dict.items():
         toc_page_num= page_numbers["toc_page_num"]
         pdf_page_num= page_numbers["pdf_page_num"]
         offset=page_numbers["offset"]
@@ -318,12 +423,12 @@ def calculate_offset(toc_dict_array, doc,toc_page_num):
 
     #print(f"fixed offset issues {fixed_offset_dict}")
     all_headings_status_dict= fixed_offset_dict
-    print()
+    #print()
     #print(f"after fixing the offsets")
     #print(all_headings_status_dict)   
     return all_headings_status_dict 
 
-#9.
+#12.
 def fix_offset_issues(all_headings_status_dict):
     #find the offset that appears most often
     offset_count_dict={}
@@ -350,17 +455,23 @@ def fix_offset_issues(all_headings_status_dict):
     
     return all_headings_status_dict
     
-#10.
+#13.
 def extract_subheadings_and_their_text(doc,all_headings_status_dict):
     modified_all_headings_status_dict= determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict)  
 
     #now extract the text within each subheading
-    for headings, page_numbers in modified_all_headings_status_dict.items():
-        #print(f"heading:{headings}, starting page number:{page_numbers["starting_page_num"]}, ending page number:{page_numbers["ending_page_num"]}")
-        text_within_subheading=extract_text(doc,page_numbers["starting_page_num"], page_numbers["ending_page_num"])
-        #print(f"heading:{headings}, text:{text_within_subheading}")
+    for heading, page_numbers in modified_all_headings_status_dict.items():
 
-#11.
+        if(len(page_numbers["pdf_page_num"])>0):
+            #print(f"heading:{headings}, starting page number:{page_numbers["starting_page_num"]}, ending page number:{page_numbers["ending_page_num"]}")
+            #text_within_subheading=extract_text(doc,page_numbers["starting_page_num"], page_numbers["ending_page_num"])
+            #print(f"heading:{headings}, text:{text_within_subheading}")
+
+            blocks_of_text_within_subheading=traverse_the_text_inside_each_heading_and_find_text_properties(doc, page_numbers["starting_page_num"], page_numbers["ending_page_num"])
+            extract_subheadings(heading,blocks_of_text_within_subheading)
+            #break#TODO:remove this later
+
+#14.
 def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict):
 
     modified_all_headings_status_dict= all_headings_status_dict
@@ -389,34 +500,152 @@ def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_heading
             modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
 
             modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
-    print(modified_all_headings_status_dict)
+    print(f"\n added offset, starting page numbers and ending page numbers\n")
+    pprint(modified_all_headings_status_dict)
     return modified_all_headings_status_dict
 
-#12.
-def extract_text(doc,starting_page_num, ending_page_num):
+
+#15.
+def flags_decomposer(flags):
+    """Make font flags human readable."""
+    l = []
+    if flags & 2 ** 0:
+        l.append("superscript")
+    if flags & 2 ** 1:
+        l.append("italic")
+    if flags & 2 ** 2:
+        l.append("serifed")
+    else:
+        l.append("sans")
+    if flags & 2 ** 3:
+        l.append("monospaced")
+    else:
+        l.append("proportional")
+    if flags & 2 ** 4:
+        l.append("bold")
+    return ", ".join(l)
+
+
+#16.
+def extract_text(doc,starting_page_num,ending_page_num):
     all_pages_extracted_text=""
     #print(f"starting page number:{starting_page_num}, ending page number:{ending_page_num}")
     for page_num in range(starting_page_num, ending_page_num):
-        print(page_num)
+        #print(page_num)
         current_page=doc.load_page(page_num)
         current_page_extracted_text=current_page.get_text()
         all_pages_extracted_text+=current_page_extracted_text
+        
     return all_pages_extracted_text
 
-#13. extract sub-headings from the given text
-def extract_subheadings(doc,text):
-    text_split_by_line_array=text.split("\n")
 
-    for sentence in text_split_by_line_array:
-        #TODO: Continue from here
+#17.
+def traverse_the_text_inside_each_heading_and_find_text_properties(doc, starting_page_num,ending_page_num):
 
+    #a dictionary that holds the page number and its blocks and the font properties in that block
+    page_and_its_text_block_dict={}
 
+    #iterate over each page 
+    for each_page_num in range(starting_page_num,ending_page_num):
+        #print()
+        #print(each_page_num)
+        current_page=doc.load_page(each_page_num)
+
+        ###################Analyzing text#####################################
+
+        #get the text on the page as a dictionary and then extract all the blocks from it (blocks are very similar to paragraphs)
+        blocks = current_page.get_text("dict", flags=11)["blocks"]
+
+        #a dictionary that holds the blocks and its font properties for each page
+        each_page_dict={}
         
+        #to keep track of the number of blocks in the page
+        index=1
+        
+        # iterate through the text blocks
+        for b in blocks: 
 
-         
+            #a dictionary the font properties of each block
+            each_block_dict={}
+
+            #create a key for each block
+            block_key_name="block"+str(index)
+            block_text=""
 
 
-''' 
+            # iterate through the text lines in each block
+            for l in b["lines"]: 
+
+                # iterate through the text spans
+                for s in l["spans"]:    
+
+                    font= s["font"]
+                    flags=flags_decomposer(s["flags"])
+                    font_size=s["size"]
+                    #font_color=s["color"]
+                    text=s["text"]
+                    block_text+=text
+
+
+                    #keep count of the  the combination of font, its flags and font size in the block
+                    if (font,flags,font_size) not in list(each_block_dict.keys()):
+                        each_block_dict[(font,flags,font_size)]=1
+                    else:
+                        each_block_dict[(font,flags,font_size)]+=1
+                   
+            #after the traversing the whole block , add the block and its font contents dictionary to the page dictionary
+            each_block_dict["text"]=block_text
+            each_page_dict[block_key_name]=each_block_dict
+            index+=1
+
+       #after traversing the whole page, add the page and its block contents to the primary dictionary
+        page_and_its_text_block_dict[each_page_num]=each_page_dict
+
+    #pprint(page_and_its_text_block_dict)
+    return page_and_its_text_block_dict
+    
+
+#18. extract sub-headings from the given dictionary of the text blocks and their text properties
+def extract_subheadings(toc_heading,text_blocks_dict):
+    
+    #analyze the pattern of the subheadings (subheadings are usually bold or greater in size or both)
+    pattern_of_subheading= analyze_pattern_of_subheading(toc_heading,text_blocks_dict)
+
+    #find the subheadings
+
+
+#19. 
+def analyze_pattern_of_subheading(toc_heading,text_blocks_dict):
+    '''
+    Steps in analyzing are:
+    1. check whether the text is the same as the TOC heading, if yes, then don't consider it
+    2. check the font sizes of the text, the largest ones are the subheadings usually
+    3. check for keyword "bold" in the font and the flags of each block to determine the subheadings
+    '''
+
+    blocks_that_might_contain_subheading=[]
+    for page_number, blocks in text_blocks_dict.items():
+        #print()
+        #print(page_number, blocks)
+
+        #step 1:
+        #print(blocks.keys())
+        for block in list(blocks.keys()):
+            #print()
+            #print(blocks[block]["text"])
+            text_in_block= blocks[block]["text"].strip()
+            #print(text_in_block)
+
+            regex_for_toc_heading= r''+toc_heading+'(?![\s\w\d])'
+            #regex_for_toc_heading= r''+toc_heading
+
+            if re.findall(regex_for_toc_heading, text_in_block):
+                print(f"\n this is a toc heading {text_in_block}")
+            else:
+                blocks_that_might_contain_subheading.append(blocks[block])
+            #TODO: there is a issue in the extraction of table of contents. Not all the table of contents are extracted,hence need to fix that first and then continue
+            
+'''
 ######################################################################################################################################################################
                                                                                     ACTUAL IMPLEMENTATION
 ######################################################################################################################################################################
@@ -429,7 +658,7 @@ all_toc_dicts={}
 
 
 #Single PDFs testing
-doc=fitz.open(os.path.join(directory,all_pdfs[0]))
+doc=fitz.open(os.path.join(directory,all_pdfs[3]))
 #doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict
@@ -439,15 +668,13 @@ dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
 
 if(dict_for_current_pdf !=None):
     print("DICTIONARY FOR CURRENT PDF IS\n")
-    print(dict_for_current_pdf)
+    pprint(dict_for_current_pdf)
 
     #get the pdf page number along with the Table of Contents Page number
     headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
 
     #go to the pages with the headings and extract subheadings
     extract_subheadings_and_their_text(doc,headings_status_dict)
-
-
 else:
     print("no table of contents present for the pdf")
 

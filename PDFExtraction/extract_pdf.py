@@ -370,7 +370,7 @@ def calculate_offset(toc_dict_array, doc,toc_page_num):
     for heading,page_num in toc_dict.items():
         #print(page_num, heading)
         all_headings_status_dict[heading]={"toc_page_num":page_num,"pdf_page_num":[],"offset":0}
-        regex_for_current_heading=r''+heading+'\s*\n'
+        regex_for_current_heading=r''+heading.strip()+'\s*(?![\w\d])'
        # print(f"regex is :{regex_for_current_heading}")
             
         for each_page in range(0,doc.page_count):
@@ -383,8 +383,9 @@ def calculate_offset(toc_dict_array, doc,toc_page_num):
                 if re.findall(regex_for_current_heading,current_page_text):
                     all_headings_status_dict[heading]["pdf_page_num"].append(each_page)
         #print()
-
-    #print(all_headings_status_dict)
+    #print()
+    #pprint(all_headings_status_dict)
+    #print()
 
     #calculate the offset
     for heading,page_numbers in all_headings_status_dict.items():
@@ -452,6 +453,12 @@ def fix_offset_issues(all_headings_status_dict):
     
     for headings, page_numbers in all_headings_status_dict.items():
         page_numbers["offset"]=offset_with_max_count
+
+    #when the pdf_page_num_array length is 0, and if toc_page_num and offset is present then fill the pdf_page_num array
+    for heading, page_numbers in all_headings_status_dict.items():
+        if len(page_numbers["pdf_page_num"])<1:
+            all_headings_status_dict[heading]["pdf_page_num"].append(int(page_numbers["toc_page_num"])+int(page_numbers["offset"]))
+    
     
     return all_headings_status_dict
     
@@ -461,35 +468,61 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
 
     #now extract the text within each subheading
     for heading, page_numbers in modified_all_headings_status_dict.items():
-
+        #["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]
+        #for testing purposes
+        if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
+            continue
+        
         if(len(page_numbers["pdf_page_num"])>0):
             #print(f"heading:{headings}, starting page number:{page_numbers["starting_page_num"]}, ending page number:{page_numbers["ending_page_num"]}")
             #text_within_subheading=extract_text(doc,page_numbers["starting_page_num"], page_numbers["ending_page_num"])
             #print(f"heading:{headings}, text:{text_within_subheading}")
 
-            blocks_of_text_within_subheading=traverse_the_text_inside_each_heading_and_find_text_properties(doc, page_numbers["starting_page_num"], page_numbers["ending_page_num"])
-            extract_subheadings(heading,blocks_of_text_within_subheading)
-            #break#TODO:remove this later
+            #print(f"\n Current heading is :{heading}\n")
+            subheadings_within_heading_dict=extract_subheadings(doc, page_numbers["starting_page_num"], page_numbers["ending_page_num"])
+            #extract_subheadings(heading,blocks_of_text_within_subheading)
+            #pprint(subheadings_within_heading_dict)
+
+            filter_1_possible_subheadings_dict={}
+            
+            for page_number in list(subheadings_within_heading_dict.keys()):
+                filter_1_possible_subheadings_dict[page_number]=[]
+                filter_1_possible_subheadings_dict[page_number].extend(remove_toc_headings_from_subheadings(heading,subheadings_within_heading_dict[page_number]))
+                
+            print(filter_1_possible_subheadings_dict)
+            #TODO:remove this later
+            break
 
 #14.
 def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict):
 
     modified_all_headings_status_dict= all_headings_status_dict
+    #pprint(all_headings_status_dict)
     #go to the page with the headings and extract the text until the next heading
     for index,(headings,page_numbers) in enumerate(all_headings_status_dict.items()):
 
         #when we reach to the last ending, there is no heading after it hence dont increment the index
         if index < len(list(all_headings_status_dict.keys()))-1:
             next_heading_index=index+1
-
-            #assumption that each new heading starts at a new page
-            text_within_heading_starts_at_page= int(page_numbers["toc_page_num"])+ int(page_numbers["offset"])
             next_heading=list(all_headings_status_dict.keys())[next_heading_index]
-            text_within_heading_ends_at_page=int(all_headings_status_dict[next_heading]["toc_page_num"])+ int(page_numbers["offset"])-1
-            modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
-            modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
+            current_heading=list(all_headings_status_dict.keys())[index]
 
-            #print(f"heading is :{headings}. It starts at page:{text_within_heading_starts_at_page} and ends at Page:{text_within_heading_ends_at_page}")
+            if int(all_headings_status_dict[next_heading]["toc_page_num"]) == int(all_headings_status_dict[current_heading]["toc_page_num"]):
+                #that current heading and next heading is on the same page
+                #print("\nNext heading and current heading are on the same page\n")
+                text_within_heading_starts_at_page= int(page_numbers["toc_page_num"])+ int(page_numbers["offset"])
+                text_within_heading_ends_at_page=text_within_heading_starts_at_page
+                modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
+                modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
+            
+            elif int(all_headings_status_dict[next_heading]["toc_page_num"]) > int(all_headings_status_dict[current_heading]["toc_page_num"]):
+                #assumption that each new heading starts at a new page
+                text_within_heading_starts_at_page= int(page_numbers["toc_page_num"])+ int(page_numbers["offset"])
+                text_within_heading_ends_at_page=int(all_headings_status_dict[next_heading]["toc_page_num"])+ int(page_numbers["offset"])-1
+                modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
+                modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
+
+                #print(f"heading is :{headings}. It starts at page:{text_within_heading_starts_at_page} and ends at Page:{text_within_heading_ends_at_page}")
 
         else:
             next_heading_index=None
@@ -500,8 +533,8 @@ def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_heading
             modified_all_headings_status_dict[headings]["starting_page_num"]=int(text_within_heading_starts_at_page)
 
             modified_all_headings_status_dict[headings]["ending_page_num"]=int(text_within_heading_ends_at_page)
-    print(f"\n added offset, starting page numbers and ending page numbers\n")
-    pprint(modified_all_headings_status_dict)
+    #print(f"\n added offset, starting page numbers and ending page numbers\n")
+    #pprint(modified_all_headings_status_dict)
     return modified_all_headings_status_dict
 
 
@@ -540,93 +573,211 @@ def extract_text(doc,starting_page_num,ending_page_num):
 
 
 #17.
-def traverse_the_text_inside_each_heading_and_find_text_properties(doc, starting_page_num,ending_page_num):
+def extract_subheadings(doc,starting_page_num,ending_page_num):
 
     #a dictionary that holds the page number and its blocks and the font properties in that block
-    page_and_its_text_block_dict={}
+    #page_and_its_text_block_dict={}
 
+    #possible subheadings in the heading
+    possible_subheadings_array={}
+    
     #iterate over each page 
-    for each_page_num in range(starting_page_num,ending_page_num):
+    for each_page_num in range(starting_page_num,ending_page_num+1):
         #print()
-        #print(each_page_num)
+        #print(f"current page number within the heading is:{each_page_num}\n")
+
+        #the index of the last page is one less than the page count and hence gives an issue when loading the page. Since the last page of the pdf is already parsed in the previous iteration, current iteration need not be carried out, hence break is used 
+        if int(each_page_num)==int(doc.page_count):
+            break
         current_page=doc.load_page(each_page_num)
+
+        possible_subheadings_array[each_page_num]=[]
 
         ###################Analyzing text#####################################
 
         #get the text on the page as a dictionary and then extract all the blocks from it (blocks are very similar to paragraphs)
         blocks = current_page.get_text("dict", flags=11)["blocks"]
+        #pprint(f"Blocks on the Current page is\n")
+        #pprint(f"{blocks}")
 
         #a dictionary that holds the blocks and its font properties for each page
-        each_page_dict={}
+        #each_page_dict={}
         
         #to keep track of the number of blocks in the page
-        index=1
+        #index=1
         
         # iterate through the text blocks
         for b in blocks: 
 
             #a dictionary the font properties of each block
-            each_block_dict={}
+            #each_block_dict={"font_properties":[]}
+            #each_block_dict={}
+            #subheadings_in_a_block=[]
 
             #create a key for each block
-            block_key_name="block"+str(index)
-            block_text=""
+            #block_key_name="block"+str(index)
+            #block_text=""
+            
+            print(f"\nNEW BLOCK\nnumber of lines in the block are:{len(b["lines"])}\n")
+            #print("the text in the block is\n")
+            #to avoid table's column heading being part of the subheading, just check the number of lines in the block. If the number of lines in the block are greater than 2, then it not a subheading block
+            if len(b["lines"])<=2:
+                # iterate through the text lines in each block
+                for l in b["lines"]: 
+                    #print(f"the lines are {b["lines"]}")
 
+                    # iterate through the text spans
+                    for s in l["spans"]:    
 
-            # iterate through the text lines in each block
-            for l in b["lines"]: 
+                        font= s["font"]
+                        flags=flags_decomposer(s["flags"])
+                        #print(font, flags)
+                        font_size=s["size"]
+                        #font_color=s["color"]
+                        text=s["text"]
+                        #print(text)
+                        #block_text+=text
 
-                # iterate through the text spans
-                for s in l["spans"]:    
+                        #print(f"\ncurrent span text is {text}hello and font style is {font} and flags are {flags}\n")
+                        temp_subheadings= find_possible_subheadings(text.strip(),font,flags)
+                        
 
-                    font= s["font"]
-                    flags=flags_decomposer(s["flags"])
-                    font_size=s["size"]
-                    #font_color=s["color"]
-                    text=s["text"]
-                    block_text+=text
+                        if temp_subheadings!=None:
+                            #temp_subheadings.append("Business") #just for testing
+                            possible_subheadings_array[each_page_num].extend(temp_subheadings)
 
+                        #keep count of the  the combination of font, its flags and font size in the block
+                        '''if (font,flags,font_size) not in list(each_block_dict.keys()):
+                            each_block_dict[(font,flags,font_size)]=1
+                            #each_block_dict["font_properties"].append({"font":font,"flags":flags, "font_size":font_size, "count":1})
+                        else:
+                            each_block_dict[(font,flags,font_size)]+=1
+                            #each_block_dict["font_properties"]
+                        '''
+                    
+                #after the traversing the whole block , add the block and its font contents dictionary to the page dictionary
+                #each_block_dict["text"]=block_text
+                #print(f"text in each block is\n {block_text}\n")
+                #each_block_dict["no_of_lines"]=len(b["lines"])
+                #each_page_dict[block_key_name]=each_block_dict
+                
+                #index+=1
+            
 
-                    #keep count of the  the combination of font, its flags and font size in the block
-                    if (font,flags,font_size) not in list(each_block_dict.keys()):
-                        each_block_dict[(font,flags,font_size)]=1
-                    else:
-                        each_block_dict[(font,flags,font_size)]+=1
-                   
-            #after the traversing the whole block , add the block and its font contents dictionary to the page dictionary
-            each_block_dict["text"]=block_text
-            each_page_dict[block_key_name]=each_block_dict
-            index+=1
+                #after traversing the whole page, add the page and its block contents to the primary dictionary
+                #page_and_its_text_block_dict[each_page_num]=each_page_dict
 
-       #after traversing the whole page, add the page and its block contents to the primary dictionary
-        page_and_its_text_block_dict[each_page_num]=each_page_dict
+                #break
+            else:
+                print("this is not a subheading")
+        
 
     #pprint(page_and_its_text_block_dict)
-    return page_and_its_text_block_dict
+    #return page_and_its_text_block_dict
+    return possible_subheadings_array
     
 
 #18. extract sub-headings from the given dictionary of the text blocks and their text properties
-def extract_subheadings(toc_heading,text_blocks_dict):
+#def extract_subheadings(toc_heading,text_blocks_dict):
     
     #analyze the pattern of the subheadings (subheadings are usually bold or greater in size or both)
-    pattern_of_subheading= analyze_pattern_of_subheading(toc_heading,text_blocks_dict)
+    #pattern_of_subheading= analyze_pattern_of_subheading(toc_heading,text_blocks_dict)
 
     #find the subheadings
 
+
+
+def find_possible_subheadings(current_span_text,font, flags):
+    '''
+    Steps in analyzing are:
+    1. check whether the text is the same as the TOC heading, if yes, then don't consider it
+    2. check the font sizes of the text.The largest ones are the subheadings usually
+    3. check for keyword "bold" in the font and the flags of each block to determine the subheadings
+    '''
+
+    '''
+    filter_1_blocks_that_might_contain_subheading={}
+    regex_for_toc_heading= r''+toc_heading+'(?![\s\w\d])'
+            #regex_for_toc_heading= r''+toc_heading
+
+            if re.findall(regex_for_toc_heading, current_block) and no_of_lines_in_block <=2 :
+                #print(f"\n this is a toc heading {text_in_block} and number of lines in block is :{no_of_lines_in_block}\n")
+                #blocks_that_might_contain_subheading.append()
+                continue
+            else:
+                filter_1_blocks_that_might_contain_subheading[current_page_number].append(current_block)
+                #filter_1_blocks_that_might_contain_subheading["blocks"].append(blocks[block])
+    '''
+
+    filter_2_block_that_might_contain_subheading=[]
+    all_fonts= font.split(",")
+    all_flags=flags.split(",")
+
+    pattern=re.compile(r'italic',re.IGNORECASE)
+    for font in all_fonts:
+        #print(font)
+        if font.strip().lower()=="bold" and not re.findall(pattern,font.strip().lower()) and current_span_text not in filter_2_block_that_might_contain_subheading and not re.findall(r'(?<![\w\d])\s+(?![\w\d])', current_span_text) and current_span_text!="":
+            filter_2_block_that_might_contain_subheading.append(current_span_text)
+        #else:
+            #print(current_span_text, font)
+
+    for flag in all_flags:
+        #print(f"\nflag is :{flag} and type is type:{type(flag)}\n")
+        if flag.strip().lower()=="bold" and not re.findall(pattern,font.strip().lower()) and current_span_text not in filter_2_block_that_might_contain_subheading and not re.findall(r'(?<![\w\d])\s+(?![\w\d])', current_span_text) and current_span_text!="":
+            filter_2_block_that_might_contain_subheading.append(current_span_text)
+            
+        #else:
+            #print(flag,re.findall(pattern,flag.strip().lower()))
+
+
+    if len(filter_2_block_that_might_contain_subheading)>0:
+        #print()
+        #print(f"the blocks that might contain the subheading are :\n")
+        #pprint(filter_2_block_that_might_contain_subheading)
+
+        return filter_2_block_that_might_contain_subheading
+    else:
+        return None
+    
+
+#19.
+def remove_toc_headings_from_subheadings(toc_heading,possible_subheadings_array):
+
+    filtered_subheadings_array=[]
+    regex_for_toc_heading= r'(?<=Item\s\w\w\.\s)'+toc_heading+'(?![\s\w\d])'
+    another_regex_for_toc_heading=r'(?<=Item\s\w\.\s)'+toc_heading+'(?![\s\w\d])'
+    
+    #regex_for_toc_heading= r''+toc_heading
+
+    for subheading in possible_subheadings_array:
+        if re.findall(regex_for_toc_heading, subheading) or re.findall(another_regex_for_toc_heading,subheading):
+            print(f"\n this is a toc heading {subheading}\n")
+            #blocks_that_might_contain_subheading.append()
+            continue
+        elif "Item" in subheading or "PART" in subheading:
+            continue
+        else:
+            filtered_subheadings_array.append(subheading)
+            #filter_1_blocks_that_might_contain_subheading["blocks"].append(blocks[block])
+    return filtered_subheadings_array
 
 #19. 
 def analyze_pattern_of_subheading(toc_heading,text_blocks_dict):
     '''
     Steps in analyzing are:
     1. check whether the text is the same as the TOC heading, if yes, then don't consider it
-    2. check the font sizes of the text, the largest ones are the subheadings usually
+    2. check the font sizes of the text.The largest ones are the subheadings usually
     3. check for keyword "bold" in the font and the flags of each block to determine the subheadings
     '''
 
-    blocks_that_might_contain_subheading=[]
+
+    '''
+    filter_1_blocks_that_might_contain_subheading={}
+    #print(f"{text_blocks_dict}")
     for page_number, blocks in text_blocks_dict.items():
         #print()
         #print(page_number, blocks)
+        filter_1_blocks_that_might_contain_subheading[page_number]=[]
 
         #step 1:
         #print(blocks.keys())
@@ -634,16 +785,57 @@ def analyze_pattern_of_subheading(toc_heading,text_blocks_dict):
             #print()
             #print(blocks[block]["text"])
             text_in_block= blocks[block]["text"].strip()
+            no_of_lines_in_block=blocks[block]["no_of_lines"]
             #print(text_in_block)
 
             regex_for_toc_heading= r''+toc_heading+'(?![\s\w\d])'
             #regex_for_toc_heading= r''+toc_heading
 
-            if re.findall(regex_for_toc_heading, text_in_block):
-                print(f"\n this is a toc heading {text_in_block}")
+            if re.findall(regex_for_toc_heading, text_in_block) and no_of_lines_in_block <=2 :
+                #print(f"\n this is a toc heading {text_in_block} and number of lines in block is :{no_of_lines_in_block}\n")
+                #blocks_that_might_contain_subheading.append()
+                continue
             else:
-                blocks_that_might_contain_subheading.append(blocks[block])
-            #TODO: there is a issue in the extraction of table of contents. Not all the table of contents are extracted,hence need to fix that first and then continue
+                filter_1_blocks_that_might_contain_subheading[page_number].append(blocks[block])
+                #filter_1_blocks_that_might_contain_subheading["blocks"].append(blocks[block])
+
+            
+        #step 2:
+        font_properties_of_block=[]
+        filter_2_block_that_might_contain_subheading=[]
+        for page_number,blocks in filter_1_blocks_that_might_contain_subheading.items():
+            #print(page_number, blocks)
+            for block in blocks:
+                all_keys_in_block=list(block.keys())
+                for key,count in block.items():
+                    if key not in ["text","no_of_lines"]:
+                        font_properties_of_block.append({key:count})
+                        (font, flags, font_size)=key
+                        all_fonts= font.split(",")
+                        all_flags=flags.split(",")
+
+                        for font in all_fonts:
+                            #print(font)
+                            if font.strip().lower()=="bold" and block not in filter_2_block_that_might_contain_subheading:
+                                filter_2_block_that_might_contain_subheading.append(block[])
+                        
+                        for flag in all_flags:
+                            #print(f"\nflag is :{flag} and type is type:{type(flag)}\n")
+                            if flag.strip().lower()=="bold" and block not in filter_2_block_that_might_contain_subheading:
+                                filter_2_block_that_might_contain_subheading.append(block)
+
+
+
+            #font_properties_of_block[]=font_properties_of_block
+        #break
+        pprint(filter_2_block_that_might_contain_subheading)
+
+        #TODO:Need to rerun the flag decomposer function here, and the lines that are bold add it to the list
+    '''
+
+            
+
+        
             
 '''
 ######################################################################################################################################################################
@@ -658,7 +850,7 @@ all_toc_dicts={}
 
 
 #Single PDFs testing
-doc=fitz.open(os.path.join(directory,all_pdfs[3]))
+doc=fitz.open(os.path.join(directory,all_pdfs[0]))
 #doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict

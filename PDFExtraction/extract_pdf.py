@@ -470,8 +470,8 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
     for heading, page_numbers in modified_all_headings_status_dict.items():
         #["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]
         #for testing purposes
-        #if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
-            #continue
+        if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
+            continue
         
         if(len(page_numbers["pdf_page_num"])>0):
             #print(f"heading:{headings}, starting page number:{page_numbers["starting_page_num"]}, ending page number:{page_numbers["ending_page_num"]}")
@@ -490,7 +490,7 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
                 filter_1_possible_subheadings_dict[page_number].extend(remove_toc_headings_from_subheadings(heading,subheadings_within_heading_dict[page_number]))
                 
             #print(filter_1_possible_subheadings_dict)
-            extract_text_within_subheading(doc,filter_1_possible_subheadings_dict)
+            extract_text_within_subheading(doc,filter_1_possible_subheadings_dict,heading,page_numbers["starting_page_num"])
 
             #TODO:remove this later
             break
@@ -763,7 +763,7 @@ def remove_toc_headings_from_subheadings(toc_heading,possible_subheadings_array)
             #filter_1_blocks_that_might_contain_subheading["blocks"].append(blocks[block])
     return filtered_subheadings_array
 
-#19. 
+#21. 
 #def analyze_pattern_of_subheading(toc_heading,text_blocks_dict):
     '''
     Steps in analyzing are:
@@ -835,7 +835,9 @@ def remove_toc_headings_from_subheadings(toc_heading,possible_subheadings_array)
         #TODO:Need to rerun the flag decomposer function here, and the lines that are bold add it to the list
     '''
 
-def extract_text_within_subheading(doc,subheading_dict):
+
+#22
+def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_page_num):
 
     all_page_numbers_array=list(subheading_dict.keys())
     #print(all_page_numbers_array)
@@ -847,89 +849,168 @@ def extract_text_within_subheading(doc,subheading_dict):
         #print(page_number)
         if len(subheading_dict[page_number])>0:
             temp_page_array.append(page_number)
-            
-    all_page_numbers_array.clear()
-    all_page_numbers_array.extend(temp_page_array)
+    
+    if len(temp_page_array)>0:
+        all_page_numbers_array.clear()
+        all_page_numbers_array.extend(temp_page_array)
 
-    #print(subheading_dict)
-    #print(all_page_numbers_array)
+    print(subheading_dict)
+    print(all_page_numbers_array)
 
-    #iterate over the array after removing empty values
-    for index,page_number in enumerate(all_page_numbers_array):
-        #print(page_number)
-        #to avoid index out of range, consider only till the second last subheading
-        if index < len (all_page_numbers_array)-1:
-            #get the array of subheadings on each page number,to determine whether the next subheading is on the same page or the next page
-            current_element_in_dict=subheading_dict[page_number]
-            next_element_in_dict=subheading_dict[all_page_numbers_array[index+1]]
-            
+    #text between the main heading and the first subheading
+    regex_for_toc_heading= r''+toc_heading+'(?![\s\w\d])'
+    #another_regex_for_toc_heading=r'(?<=Item\s\w\.\s)'+toc_heading+'(?![\s\w\d])'
+
+    first_subheading=subheading_dict[all_page_numbers_array[0]][0]
+    first_subheading_page_num=all_page_numbers_array[0]
+    #print(first_subheading)
+    text_between_main_heading_and_first_subheading=""
+    
+    #On a page, it might be that there are subheadings for the previous heading. This text shouldn't be recorded in the current heading. Hence this flag is used to tell the program to start recording text only after the current heading is found
+    main_heading_found=False
+    start_recording_text=False
+    all_blocks=[]
+    for page_number in range(toc_heading_page_num, first_subheading_page_num+1):
+        toc_heading_page= doc.load_page(page_number)
+        blocks=toc_heading_page.get_text("dict",flags=11)["blocks"]
+        all_blocks.extend(blocks)
+
+    for b in all_blocks:
+        for l in b["lines"]:
+            for s in l["spans"]:
+                text=s["text"]
+                if re.findall(regex_for_toc_heading,text.strip()):
+                    start_recording_text=True
+                    main_heading_found=True
+                    continue
+                if re.findall(r""+first_subheading,text.strip()):
+                    start_recording_text=False
+
+                if start_recording_text:
+                    text_between_main_heading_and_first_subheading+=text.strip()+" "
+    print()       
+    print()   
+    print(text_between_main_heading_and_first_subheading)
 
 
-            #print(current_element_in_dict)
-            #print(next_element_in_dict)
-            
-
-            #check whether the next element is not the empty or the current element is not empty
-            #if len(current_element_in_dict)>0 and len(next_element_in_dict)>0:
-
-            #get the current sub-heading and the next subheading
-            for index_subheading,subheading in enumerate(current_element_in_dict):
-                current_heading= subheading
-                next_heading_page_number=all_page_numbers_array[index+1]
+    if main_heading_found:
+        #iterate over the array after removing empty values
+        for index,page_number in enumerate(all_page_numbers_array):
+            #print(page_number)
+            #to avoid index out of range, consider only till the second last subheading
+            if index < len (all_page_numbers_array)-1:
+                #get the array of subheadings on each page number,to determine whether the next subheading is on the same page or the next page
+                current_element_in_dict=subheading_dict[page_number]
+                next_element_in_dict=subheading_dict[all_page_numbers_array[index+1]]
                 
-                if index_subheading==len(current_element_in_dict)-1:
-                    next_heading=next_element_in_dict[0]
+                #print(current_element_in_dict)
+                #print(next_element_in_dict)
+                
+                #check whether the next element is not the empty or the current element is not empty
+                #if len(current_element_in_dict)>0 and len(next_element_in_dict)>0:
+
+                #get the current sub-heading and the next subheading
+                for index_subheading,subheading in enumerate(current_element_in_dict):
+                    current_heading= subheading
+                    next_heading_page_number=all_page_numbers_array[index+1]
                     
-                else:
-                    next_heading=current_element_in_dict[index_subheading+1]
-                
-                print(f"current heading is :{current_heading} and next heading is:{ next_heading}\n and next heading page number is :{next_heading_page_number}")
+                    if index_subheading==len(current_element_in_dict)-1:
+                        next_heading=next_element_in_dict[0]
+                        
+                    else:
+                        next_heading=current_element_in_dict[index_subheading+1]
+                    
+                    print(f"current sub-heading is :{current_heading} and next sub-heading is:{ next_heading}\n and next sub-heading page number is :{next_heading_page_number}")
 
-                #extract text between the subheadings
-                text_between_subheadings=""
-                current_subheading_page_text_blocks=doc.load_page(page_number).get_text("dict",flags=11)["blocks"]
-                #print(current_subheading_page_text_blocks)
-                next_subheading_page_text_blocks=doc.load_page(next_heading_page_number).get_text("dict",flags=11)["blocks"]
-                #print(next_subheading_page_text_blocks)
+                    #extract text between the subheadings
+                    text_between_subheadings=""
+                    #current_subheading_page_text_blocks=doc.load_page(page_number).get_text("dict",flags=11)["blocks"]
+                    #print(current_subheading_page_text_blocks)
+                    text_blocks=[]
+                    for page_number_of_contents_within_subheading in range(page_number,next_heading_page_number+1):
+                        current_page_blocks=doc.load_page(page_number_of_contents_within_subheading).get_text("dict",flags=11)["blocks"]
+                        text_blocks.extend(current_page_blocks)
+                    #next_subheading_page_text_blocks=doc.load_page(next_heading_page_number).get_text("dict",flags=11)["blocks"]
+                    #print(next_subheading_page_text_blocks)
 
-                combined_text_blocks_of_both_pages=current_subheading_page_text_blocks
-                combined_text_blocks_of_both_pages.extend(next_subheading_page_text_blocks)
-                #print(combined_text_blocks_of_both_pages)
+                    #combined_text_blocks_of_both_pages=current_subheading_page_text_blocks
+                    #combined_text_blocks_of_both_pages.extend(next_subheading_page_text_blocks)
+                    #print(combined_text_blocks_of_both_pages)
 
-                start_recording_text=False
-                for b in combined_text_blocks_of_both_pages:
-                    for l in b["lines"]:
-                        for s in l["spans"]:
-                            text=s["text"].strip()
-                            if re.findall(r""+current_heading,text):
-                                print(f"found the current subheading: {text}")
-                                start_recording_text=True
-                                continue
-                            elif re.findall(r""+next_heading,text):
-                                start_recording_text=False
+                    start_recording_text=False
+                    for b in text_blocks:
+                        for l in b["lines"]:
+                            for s in l["spans"]:
+                                text=s["text"].strip()
+                                if re.findall(r""+current_heading,text):
+                                    print(f"found the current subheading: {text}")
+                                    start_recording_text=True
+                                    continue
+                                elif re.findall(r""+next_heading,text):
+                                    start_recording_text=False
 
-                            if start_recording_text :
-                                text_between_subheadings+=text
-                print()
-                print(text_between_subheadings)
-                print()
-                break
-                
+                                if start_recording_text :
+                                    text_between_subheadings+=" "+text
+                    print()
+                    print(text_between_subheadings)
+                    print()
+                    #break
+            #if the heading is of only one page and there subheadings only on that one page
+            elif index==0 and len(all_page_numbers_array)-1==0:
+                #get the array of subheadings on each page number,to determine whether the next subheading is on the same page or the next page
+                current_element_in_dict=subheading_dict[all_page_numbers_array[index]]
+                next_element_in_dict=current_element_in_dict
 
-                                
+                #get the current sub-heading and the next subheading
+                for index_subheading,subheading in enumerate(current_element_in_dict):
+                    current_heading= subheading
+                    next_heading_page_number=all_page_numbers_array[index]
+                    
+                    if index_subheading==len(current_element_in_dict)-1:
+                        next_heading=next_element_in_dict[0]
+                        
+                    else:
+                        next_heading=current_element_in_dict[index_subheading+1]
+                    
+                    print(f"current sub-heading is :{current_heading} and next sub-heading is:{ next_heading}\n and next sub-heading page number is :{next_heading_page_number}")
 
+                    #extract text between the subheadings
+                    text_between_subheadings=""
+                    #current_subheading_page_text_blocks=doc.load_page(page_number).get_text("dict",flags=11)["blocks"]
+                    #print(current_subheading_page_text_blocks)
+                    text_blocks=[]
+                    for page_number_of_contents_within_subheading in range(page_number,next_heading_page_number+1):
+                        current_page_blocks=doc.load_page(page_number_of_contents_within_subheading).get_text("dict",flags=11)["blocks"]
+                        text_blocks.extend(current_page_blocks)
+                    #next_subheading_page_text_blocks=doc.load_page(next_heading_page_number).get_text("dict",flags=11)["blocks"]
+                    #print(next_subheading_page_text_blocks)
 
+                    #combined_text_blocks_of_both_pages=current_subheading_page_text_blocks
+                    #combined_text_blocks_of_both_pages.extend(next_subheading_page_text_blocks)
+                    #print(combined_text_blocks_of_both_pages)
 
+                    start_recording_text=False
+                    for b in text_blocks:
+                        for l in b["lines"]:
+                            for s in l["spans"]:
+                                text=s["text"].strip()
+                                if re.findall(r""+current_heading,text):
+                                    print(f"found the current subheading: {text}")
+                                    start_recording_text=True
+                                    continue
+                                elif re.findall(r""+next_heading,text):
+                                    start_recording_text=False
 
+                                if start_recording_text :
+                                    text_between_subheadings+=" "+text
+                    print()
+                    print(text_between_subheadings)
+                    print()
+                    #break
 
-
-
-                
-                
-
-        #TODO:last subheading for the heading      
-        #else:
-
+            #TODO:last subheading for the heading      
+            else:
+                print("i am here")
         
 
 

@@ -156,6 +156,7 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
     const result = await cloudinary.uploader.upload(path).catch((error) => {
       errorThrow(error.message, 500);
     });
+    console.log(path);
     fs.unlink(path, (err) => {
       if (err) {
         console.error(err);

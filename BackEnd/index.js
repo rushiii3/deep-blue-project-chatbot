@@ -150,12 +150,13 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
   try {
     const {financialYear} = req.body;
     const { filename, path } = req.file;
-    if (!filename || !path) {
-      errorThrow("Please input PDF", 500);
-    }
-    const result = await cloudinary.uploader.upload(path).catch((error) => {
-      errorThrow(error.message, 500);
-    });
+    console.log(req.file);
+    // if (!filename || !path) {
+    //   errorThrow("Please input PDF", 500);
+    // }
+    // const result = await cloudinary.uploader.upload(path).catch((error) => {
+    //   errorThrow(error.message, 500);
+    // });
     console.log(path);
     // fs.unlink(path, (err) => {
     //   if (err) {
@@ -164,21 +165,21 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
     //   }
     //   console.log("removed file");
     // });
-    if (!result) {
-      errorThrow("Failed to upload pdf", 500);
-    }
-    const upload = await File.create({
-      filename: filename,
-      financial_year: financialYear,
-      pdf: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
-      isSelected:false
-    });
-    if (!upload) {
-      errorThrow("Failed to upload pdf", 500);
-    }
+    // if (!result) {
+    //   errorThrow("Failed to upload pdf", 500);
+    // }
+    // const upload = await File.create({
+    //   filename: filename,
+    //   financial_year: financialYear,
+    //   pdf: {
+    //     public_id: result.public_id,
+    //     url: result.secure_url,
+    //   },
+    //   isSelected:false
+    // });
+    // if (!upload) {
+    //   errorThrow("Failed to upload pdf", 500);
+    // }
     res.json({success:true, message: "File uploaded successfully" , upload });
   } catch (error) {
     next(error)

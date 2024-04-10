@@ -148,16 +148,15 @@ app.get("/get-data",async(req,res,next)=>{
 // Route for file upload
 app.post("/upload", upload.single("pdf[]"), async (req, res) => {
   try {
-    const {financialYear} = req.body;
+    const { financialYear } = req.body;
     const { filename, path } = req.file;
     console.log(req.file);
-    // if (!filename || !path) {
-    //   errorThrow("Please input PDF", 500);
-    // }
+    
+    // Uncomment the following code to enable Cloudinary upload
     // const result = await cloudinary.uploader.upload(path).catch((error) => {
     //   errorThrow(error.message, 500);
     // });
-    console.log(path);
+    // console.log(path);
     // fs.unlink(path, (err) => {
     //   if (err) {
     //     console.error(err);
@@ -180,11 +179,13 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
     // if (!upload) {
     //   errorThrow("Failed to upload pdf", 500);
     // }
+    
     res.json({success:true, message: "File uploaded successfully" , upload });
   } catch (error) {
     next(error)
   }
 });
+
 app.delete("/delete/:id",async(req,res,next)=>{
   try {
     const {id} = req.params;

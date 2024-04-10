@@ -468,9 +468,8 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
 
     #now extract subheading
     for heading, page_numbers in modified_all_headings_status_dict.items():
-        #["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]
-        #for testing purposes
-        if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
+        #["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]
+        if heading in ["Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
             continue
         
         if(len(page_numbers["pdf_page_num"])>0):
@@ -860,37 +859,42 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
     #text between the main heading and the first subheading
     regex_for_toc_heading= r''+toc_heading+'(?![\s\w\d])'
     #another_regex_for_toc_heading=r'(?<=Item\s\w\.\s)'+toc_heading+'(?![\s\w\d])'
-
-    first_subheading=subheading_dict[all_page_numbers_array[0]][0]
-    first_subheading_page_num=all_page_numbers_array[0]
-    #print(first_subheading)
-    text_between_main_heading_and_first_subheading=""
-    
-    #On a page, it might be that there are subheadings for the previous heading. This text shouldn't be recorded in the current heading. Hence this flag is used to tell the program to start recording text only after the current heading is found
     main_heading_found=False
     start_recording_text=False
-    all_blocks=[]
-    for page_number in range(toc_heading_page_num, first_subheading_page_num+1):
-        toc_heading_page= doc.load_page(page_number)
-        blocks=toc_heading_page.get_text("dict",flags=11)["blocks"]
-        all_blocks.extend(blocks)
 
-    for b in all_blocks:
-        for l in b["lines"]:
-            for s in l["spans"]:
-                text=s["text"]
-                if re.findall(regex_for_toc_heading,text.strip()):
-                    start_recording_text=True
-                    main_heading_found=True
-                    continue
-                if re.findall(r""+first_subheading,text.strip()):
-                    start_recording_text=False
+    if len(subheading_dict[all_page_numbers_array[0]])>0:
+        first_subheading=subheading_dict[all_page_numbers_array[0]][0]
+        first_subheading_page_num=all_page_numbers_array[0]
+        #print(first_subheading)
+        text_between_main_heading_and_first_subheading=""
+        
+        #On a page, it might be that there are subheadings for the previous heading. This text shouldn't be recorded in the current heading. Hence this flag is used to tell the program to start recording text only after the current heading is found
+        
+        all_blocks=[]
+        for page_number in range(toc_heading_page_num, first_subheading_page_num+1):
+            toc_heading_page= doc.load_page(page_number)
+            blocks=toc_heading_page.get_text("dict",flags=11)["blocks"]
+            all_blocks.extend(blocks)
 
-                if start_recording_text:
-                    text_between_main_heading_and_first_subheading+=text.strip()+" "
-    print()       
-    print()   
-    print(text_between_main_heading_and_first_subheading)
+        for b in all_blocks:
+            for l in b["lines"]:
+                for s in l["spans"]:
+                    text=s["text"]
+                    if re.findall(regex_for_toc_heading,text.strip()):
+                        start_recording_text=True
+                        main_heading_found=True
+                        continue
+                    if re.findall(r""+first_subheading,text.strip()):
+                        start_recording_text=False
+
+                    if start_recording_text:
+                        text_between_main_heading_and_first_subheading+=text.strip()+" "
+        print()       
+        print()   
+        print(text_between_main_heading_and_first_subheading)
+    else:
+        #when there are no subheadings but text needs to be extracted
+        print("no subheadings for this heading")
 
 
     if main_heading_found:

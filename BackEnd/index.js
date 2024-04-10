@@ -180,8 +180,7 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
     }
     res.json({success:true, message: "File uploaded successfully" , upload });
   } catch (error) {
-    console.error("Error uploading file:", error);
-    errorThrow("Error uploading file", 500);
+    next(error)
   }
 });
 app.delete("/delete/:id",async(req,res,next)=>{

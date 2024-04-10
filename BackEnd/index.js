@@ -28,7 +28,7 @@ cloudinary.config({
 middleware for handling file uploads in Node.js. */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); //location of pdf to save temporary
+    cb(null, "/tmp"); //location of pdf to save temporary
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); //file saved

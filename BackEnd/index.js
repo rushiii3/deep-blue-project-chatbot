@@ -164,7 +164,7 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
     if (!result) {
       errorThrow("Failed to upload pdf", 500);
     }
-    const upload = await File.create({
+    const uploads = await File.create({
       filename: filename,
       financial_year: financialYear,
       pdf: {
@@ -173,11 +173,11 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
       },
       isSelected:false
     });
-    if (!upload) {
+    if (!uploads) {
       errorThrow("Failed to upload pdf", 500);
     }
     
-    res.json({success:true, message: "File uploaded successfully" , upload });
+    res.json({success:true, message: "File uploaded successfully" , uploads });
   } catch (error) {
     next(error)
   }

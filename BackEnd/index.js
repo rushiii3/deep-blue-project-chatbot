@@ -157,13 +157,13 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
       errorThrow(error.message, 500);
     });
     console.log(path);
-    fs.unlink(path, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log("removed file");
-    });
+    // fs.unlink(path, (err) => {
+    //   if (err) {
+    //     console.error(err);
+    //     return;
+    //   }
+    //   console.log("removed file");
+    // });
     if (!result) {
       errorThrow("Failed to upload pdf", 500);
     }

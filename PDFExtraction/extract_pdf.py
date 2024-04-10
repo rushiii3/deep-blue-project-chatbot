@@ -312,7 +312,7 @@ def extract_data_from_pdf(pdf_path):
     if(dict_for_current_pdf !=None):
         print("DICTIONARY FOR CURRENT PDF IS\n")
         print(dict_for_current_pdf)
-
+extract_data_from_pdf()
 '''
 #All PDFs testing
 for pdf in all_pdfs:

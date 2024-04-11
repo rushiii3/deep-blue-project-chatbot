@@ -24,6 +24,7 @@ confection==0.1.4
 configobj==5.0.8
 configparser==6.0.1
 contourpy==1.2.0
+cryptography==42.0.5
 cycler==0.12.1
 cymem==2.0.8
 debugpy==1.8.1
@@ -110,6 +111,8 @@ pandas==2.2.1
 pandocfilters==1.5.1
 parso==0.8.3
 pathlib==1.0.1
+pdfminer.six==20231228
+pdfplumber==0.11.0
 pexpect==4.9.0
 pillow==10.2.0
 platformdirs==4.2.0
@@ -130,6 +133,8 @@ PyMuPDF==1.24.1
 PyMuPDFb==1.24.1
 pynose==1.5.1
 pyparsing==3.1.2
+PyPDF2==3.0.1
+pypdfium2==4.29.0
 python-dateutil==2.9.0.post0
 python-json-logger==2.0.7
 pytz==2024.1

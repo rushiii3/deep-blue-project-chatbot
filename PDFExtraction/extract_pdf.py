@@ -1188,6 +1188,7 @@ doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 toc_page_num_array=get_table_of_contents_page_number(doc)
 dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
 
+
 if(dict_for_current_pdf !=None):
     print("DICTIONARY FOR CURRENT PDF IS\n")
     pprint(dict_for_current_pdf)
@@ -1201,6 +1202,18 @@ else:
     print("no table of contents present for the pdf")
 
 #Calculate the offset
+'''=======
+def extract_data_from_pdf(pdf_path):
+    print(pdf_path)
+    doc=fitz.open(pdf_path)
+    toc_page_num=get_table_of_contents_page_number(doc)
+    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)
+    if(dict_for_current_pdf !=None):
+        print("DICTIONARY FOR CURRENT PDF IS\n")
+        print(dict_for_current_pdf)
+extract_data_from_pdf()
+
+'''
 '''
 #All PDFs testing
 for pdf in all_pdfs:

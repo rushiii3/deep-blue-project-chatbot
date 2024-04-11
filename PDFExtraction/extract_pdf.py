@@ -11,8 +11,6 @@ nlp=spacy.load("en_core_web_sm")
 ######################################################################################################################################################################
 
 '''
-
-
 #1.get the table of contents page number  
 def get_table_of_contents_page_number(doc):
     
@@ -1183,7 +1181,7 @@ all_toc_dicts={}
 
 # print("DOCCC\n")
 # print(doc)
-#doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
+doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict
 #doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")

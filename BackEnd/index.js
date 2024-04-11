@@ -1,5 +1,5 @@
 require("dotenv").config();
-const production = true;
+const production = false;
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
@@ -150,37 +150,34 @@ app.post("/upload", upload.single("pdf[]"), async (req, res) => {
   try {
     const { financialYear } = req.body;
     const { filename, path } = req.file;
-    console.log(req.file);
+        const result = await cloudinary.uploader.upload(path).catch((error) => {
+      errorThrow(error.message, 500);
+    });
+    console.log(path);
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("removed file");
+    });
+    if (!result) {
+      errorThrow("Failed to upload pdf", 500);
+    }
+    const uploads = await File.create({
+      filename: filename,
+      financial_year: financialYear,
+      pdf: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
+      isSelected:false
+    });
+    if (!uploads) {
+      errorThrow("Failed to upload pdf", 500);
+    }
     
-    // Uncomment the following code to enable Cloudinary upload
-    // const result = await cloudinary.uploader.upload(path).catch((error) => {
-    //   errorThrow(error.message, 500);
-    // });
-    // console.log(path);
-    // fs.unlink(path, (err) => {
-    //   if (err) {
-    //     console.error(err);
-    //     return;
-    //   }
-    //   console.log("removed file");
-    // });
-    // if (!result) {
-    //   errorThrow("Failed to upload pdf", 500);
-    // }
-    // const upload = await File.create({
-    //   filename: filename,
-    //   financial_year: financialYear,
-    //   pdf: {
-    //     public_id: result.public_id,
-    //     url: result.secure_url,
-    //   },
-    //   isSelected:false
-    // });
-    // if (!upload) {
-    //   errorThrow("Failed to upload pdf", 500);
-    // }
-    
-    res.json({success:true, message: "File uploaded successfully" , upload });
+    res.json({success:true, message: "File uploaded successfully" , uploads });
   } catch (error) {
     next(error)
   }

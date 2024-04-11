@@ -8,7 +8,7 @@ const Actions = ({data,setFinanceData, FinanceData}) => {
     <div className="relative flex items-center gap-2">
       <Tooltip content="Details">
         <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-            <ViewModal url={data?.pdf?.url} setFinanceData={setFinanceData} FinanceData={FinanceData}/>
+            <ViewModal url={data?.pdf?.url} name={data?.filename.slice(0,-4)} setFinanceData={setFinanceData} FinanceData={FinanceData}/>
         </span>
       </Tooltip>
       <Tooltip content="Edit">

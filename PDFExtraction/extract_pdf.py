@@ -1065,7 +1065,11 @@ print(all_pdfs)
 all_toc_dicts={}
 
 #Single PDFs testing
-doc=fitz.open(os.path.join(directory,all_pdfs[0]))
+# doc=fitz.open(os.path.join(directory,all_pdfs[0]))
+# doc=fitz.open("https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf")
+
+# print("DOCCC\n")
+# print(doc)
 #doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict

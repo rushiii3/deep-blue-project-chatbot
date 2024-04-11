@@ -12,7 +12,7 @@ from flask import Flask, jsonify, request
 
 # get_response is accessed from the chat folder
 from main.chat import get_response
-from PDFExtraction.extract_pdf import get_pdf_from_url
+# from PDFExtraction.extract_pdf import get_pdf_from_url
 app = Flask(__name__)
 
 

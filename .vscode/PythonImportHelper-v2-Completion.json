@@ -1,5 +1,14 @@
 [
     {
+        "label": "mongo",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "mongo",
+        "description": "mongo",
+        "detail": "mongo",
+        "documentation": {}
+    },
+    {
         "label": "fitz",
         "kind": 6,
         "isExtraImport": true,
@@ -36,30 +45,20 @@
         "documentation": {}
     },
     {
-        "label": "requests",
-        "kind": 6,
+        "label": "pprint",
+        "importPath": "pprint",
+        "description": "pprint",
         "isExtraImport": true,
-        "importPath": "requests",
-        "description": "requests",
-        "detail": "requests",
+        "detail": "pprint",
         "documentation": {}
     },
     {
-        "label": "random",
+        "label": "json",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "random",
-        "description": "random",
-        "detail": "random",
-        "documentation": {}
-    },
-    {
-        "label": "string",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "string",
-        "description": "string",
-        "detail": "string",
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
         "documentation": {}
     },
     {
@@ -179,14 +178,6 @@
         "documentation": {}
     },
     {
-        "label": "get_pdf_from_url",
-        "importPath": "PDFExtraction.extract_pdf",
-        "description": "PDFExtraction.extract_pdf",
-        "isExtraImport": true,
-        "detail": "PDFExtraction.extract_pdf",
-        "documentation": {}
-    },
-    {
         "label": "get_table_of_contents_page_number",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
@@ -227,7 +218,43 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):\n    '''\n    Here, after getting the sentences that are part of table of contents, we preprocess them in the following ways\n    1. For sentences that contain a digit,split them using the digit. This is done to identify whether the digit in the sentence is the page number or is part of the heading\n    After splitting them using the digit, these sentences will be analyzed further to determine whether the digit is the page number or not.\n    2. Remove any empty strings that are present in them\n    '''\n    preprocessed_text_array=[]\n    final_preprocessed_text_array=[]\n    #1. iterate over 'cleaned_split_array' elements and split the sentences that contain digits to find the pattern",
+        "peekOfCode": "def preprocess_step_3(preprocessed_text_2,regex_for_presence_of_digits):\n    '''\n    Here, after getting the sentences that are part of table of contents, we preprocess them in the following ways\n    1. For sentences that contain a digit,split them using the digit. This is done to identify whether the digit in the sentence is the page number or is part of the heading\n    After splitting them using the digit, these sentences will be analyzed further to determine whether the digit is the page number or not.\n    2. Remove any empty strings that are present in them\n    '''\n    preprocessed_text_array=[]\n    final_preprocessed_text_array=[]\n    temp_preprocessed_text_array=[]",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_only_valid_words_from_headings",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_only_valid_words_from_headings(preprocessed_text_array_3):\n    final_preprocessed_text_array=[]\n    for sentence in preprocessed_text_array_3:\n        #regex to remove the words such as \"PART\" and \"Item 1A. etc\"\n        regex_to_remove_unnecessary_words=r'^([\\w\\s]+[\\da-zA-Z]+\\.)'\n        part_of_sentence_to_remove=re.findall(regex_to_remove_unnecessary_words,sentence)\n        split_sentence=re.split(regex_to_remove_unnecessary_words,sentence)\n        for part in split_sentence:\n            if part!=\"\" and not re.findall(regex_to_remove_unnecessary_words,part):\n                final_preprocessed_text_array.append(part.strip())",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "check_whether_consecutive_sentences_are_present",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def check_whether_consecutive_sentences_are_present(preproccessed_text_array_3):\n    value_to_return=False\n    for index,sentences in enumerate(preproccessed_text_array_3):\n        if index< len(preproccessed_text_array_3)-1:\n            if not preproccessed_text_array_3[index].isdigit() and not preproccessed_text_array_3[index+1].isdigit():\n                value_to_return=True\n                break\n            else:\n                value_to_return= False\n    return value_to_return",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "merge_consecutive_sentences_into_one",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def merge_consecutive_sentences_into_one(preprocessed_text_array_3):\n    temp_preprocessed_text_array=[]\n    index_to_skip=[]\n    for index,sentence in enumerate(preprocessed_text_array_3):\n        #check until 2nd last index else index out of range error will be thrown because we are using (index+1)\n        if index <len(preprocessed_text_array_3)-1:\n            #if this index has already been merged\n            if index in index_to_skip:\n                continue\n            #consecutive strings are present",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "encode_the_pattern",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def encode_the_pattern(preprocessed_text_array_3):\n    #.find the pattern. 0 => digit,1=> word\n    pattern=[]\n    for index, sentence in enumerate(preprocessed_text_array_3):\n        if sentence.isdigit():\n            pattern.append(0)\n        else:\n            pattern.append(1)\n    return pattern\n#10.",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -245,25 +272,106 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):\n    '''\n    Here we create the dictionary that holds the page number and the heading\n    '''\n    dict_headings={}\n    #create the dictionary\n    for index,sentence in enumerate(preprocessed_text_array_3):\n        if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:\n            dict_headings[preprocessed_text_array_3[index]]=preprocessed_text_array_3[index+1]\n    #all_toc_dicts[pdf]=dict_headings",
+        "peekOfCode": "def create_the_toc_dictionary(actual_order_array,preprocessed_text_array_3,toc_pattern):\n    '''\n    Here we create the dictionary that holds the page number and the heading\n    '''\n    dict_headings={}\n    #create the dictionary\n    for index,sentence in enumerate(preprocessed_text_array_3):\n        if(index <len(preprocessed_text_array_3)-1):\n            #print(f\"toc_pattern at current index is:{toc_pattern[index]} and at next index is :{toc_pattern[index+1]}\")\n            if toc_pattern[index]==actual_order_array[0] and toc_pattern[index+1]==actual_order_array[1]:",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
     {
-        "label": "generate_random_name",
+        "label": "calculate_offset",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def generate_random_name(length=8):\n    letters = string.ascii_lowercase\n    return ''.join(random.choice(letters) for _ in range(length))\ndef get_pdf_from_url(url):\n    print(url)\n    response = requests.get(url)\n    if response.status_code == 200:\n        directory = os.getcwd() + \"/PDFExtraction/pdfs\"\n        print(directory)\n        if not os.path.exists(directory):",
+        "peekOfCode": "def calculate_offset(toc_dict_array, doc,toc_page_num):\n   #go through each page and then check for the word on that page\n   for toc_dict in toc_dict_array:\n    all_headings_status_dict={}\n    #iterate over the dictionary\n    for heading,page_num in toc_dict.items():\n        #print(page_num, heading)\n        all_headings_status_dict[heading]={\"toc_page_num\":page_num,\"pdf_page_num\":[],\"offset\":0}\n        regex_for_current_heading=r''+heading.strip()+'\\s*(?![\\w\\d])'\n       # print(f\"regex is :{regex_for_current_heading}\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
     {
-        "label": "get_pdf_from_url",
+        "label": "fix_offset_issues",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def get_pdf_from_url(url):\n    print(url)\n    response = requests.get(url)\n    if response.status_code == 200:\n        directory = os.getcwd() + \"/PDFExtraction/pdfs\"\n        print(directory)\n        if not os.path.exists(directory):\n            os.makedirs(directory)\n        filename = os.path.join(directory, generate_random_name()+\".pdf\")\n        with open(filename, 'wb') as f:",
+        "peekOfCode": "def fix_offset_issues(all_headings_status_dict):\n    #find the offset that appears most often\n    offset_count_dict={}\n    for headings,page_numbers in all_headings_status_dict.items():\n        offset=page_numbers[\"offset\"]\n        if offset in offset_count_dict.keys():\n            offset_count_dict[offset]+=1\n        else:\n            offset_count_dict[offset]=1\n    offset_with_max_count=list(offset_count_dict.keys())[0]",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_subheadings_and_their_text",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_subheadings_and_their_text(doc,all_headings_status_dict):\n    modified_all_headings_status_dict= determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict)  \n    #print(\"\\n the headings are:\\n\")\n    #pprint(modified_all_headings_status_dict)\n    #list of all the headings \n    all_headings_list=list(modified_all_headings_status_dict.keys())\n    extracted_text_dict={}\n    #now extract subheading\n    for index,heading in enumerate(all_headings_list):\n        extracted_text_dict[heading]=[]",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "determine_starting_and_ending_page_numbers_for_each_heading",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def determine_starting_and_ending_page_numbers_for_each_heading(doc, all_headings_status_dict):\n    modified_all_headings_status_dict= all_headings_status_dict\n    #pprint(all_headings_status_dict)\n    #go to the page with the headings and extract the text until the next heading\n    for index,(headings,page_numbers) in enumerate(all_headings_status_dict.items()):\n        #when we reach to the last ending, there is no heading after it hence dont increment the index\n        if index < len(list(all_headings_status_dict.keys()))-1:\n            next_heading_index=index+1\n            next_heading=list(all_headings_status_dict.keys())[next_heading_index]\n            current_heading=list(all_headings_status_dict.keys())[index]",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "does_current_heading_end_and_new_heading_start_on_same_page",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def does_current_heading_end_and_new_heading_start_on_same_page(doc,next_toc_heading, next_toc_heading_pdf_page_num):\n    #print(f\"the next toc heading pdf page number is:{next_toc_heading_pdf_page_num}\")\n    regex_for_next_toc_heading=r''+next_toc_heading+'(?![\\s\\w\\d])'\n    next_heading_page= doc.load_page(next_toc_heading_pdf_page_num)\n    blocks= next_heading_page.get_text(\"dict\",flags=11)[\"blocks\"]\n    #text_belonging_to_previous_toc_heading=[]\n    #print(f\"{next_toc_heading}\")\n    #print(f\"the first block dimensions\\n\")\n    #pprint(blocks[0])\n    value_to_return=False",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "flags_decomposer",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def flags_decomposer(flags):\n    \"\"\"Make font flags human readable.\"\"\"\n    l = []\n    if flags & 2 ** 0:\n        l.append(\"superscript\")\n    if flags & 2 ** 1:\n        l.append(\"italic\")\n    if flags & 2 ** 2:\n        l.append(\"serifed\")\n    else:",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_subheadings",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_subheadings(doc,starting_page_num,ending_page_num,current_toc_heading, next_toc_heading):\n    regex_for_current_toc_heading= r''+current_toc_heading+'(?![\\s\\w\\d])'\n    regex_for_next_toc_heading= r''+next_toc_heading+'(?![\\s\\w\\d])'\n    #another_regex_for_toc_heading=r'(?<=Item\\s\\w\\.\\s)'+next_toc_heading+'(?![\\s\\w\\d])'\n    #print(f\"Extract subheadings| current toc heading is:{current_toc_heading} and next toc heading is {next_toc_heading}\")\n    start_finding_subheadings=False #TODO:change back to false\n    next_subheading_found_in_a_paragraph=False\n    current_toc_heading_found=False\n    #possible subheadings in the heading\n    possible_subheadings_array={}",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "find_possible_subheadings",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def find_possible_subheadings(current_span_text,font, flags):\n    '''\n    Steps in analyzing are:\n    1. check whether the text is the same as the TOC heading, if yes, then don't consider it\n    2. check the font sizes of the text.The largest ones are the subheadings usually\n    3. check for keyword \"bold\" in the font and the flags of each block to determine the subheadings\n    '''\n    filter_2_block_that_might_contain_subheading=[]\n    all_fonts= font.split(\",\")\n    all_flags=flags.split(\",\")",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "remove_toc_headings_from_subheadings",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def remove_toc_headings_from_subheadings(toc_heading,possible_subheadings_array):\n    filtered_subheadings_array=[]\n    regex_for_toc_heading= r'(?<=Item\\s\\w\\w\\.\\s)'+toc_heading+'(?![\\s\\w\\d])'\n    another_regex_for_toc_heading=r'(?<=Item\\s\\w\\.\\s)'+toc_heading+'(?![\\s\\w\\d])'\n    #regex_for_toc_heading= r''+toc_heading\n    for subheading in possible_subheadings_array:\n        if re.findall(regex_for_toc_heading, subheading) or re.findall(another_regex_for_toc_heading,subheading):\n            #print(f\"\\n this is a toc heading {subheading}\\n\")\n            #blocks_that_might_contain_subheading.append()\n            continue",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_text_within_subheading",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_page_num,next_toc_heading,next_toc_heading_page_number):\n    all_page_numbers_array=list(subheading_dict.keys())\n    #print(all_page_numbers_array)\n    #remove all the keys whose values are empty\n    temp_page_array=[]\n    for page_number in all_page_numbers_array:\n        #print(len(subheading_dict[9]))\n        #print(page_number)\n        if len(subheading_dict[page_number])>0:\n            temp_page_array.append(page_number)",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "write_output_to_a_file",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)\n        print(\"write finished\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },

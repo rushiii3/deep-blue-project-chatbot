@@ -3,7 +3,9 @@ import re
 import spacy
 import os
 from pprint import pprint 
+import json
 nlp=spacy.load("en_core_web_sm")
+company_name="pdf solutions, inc."
 
 ''' 
 ######################################################################################################################################################################
@@ -500,7 +502,7 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
 
         
         #["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Selected Financial Data","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]
-        #if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Market For Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
+        #if heading in ["Business","Risk Factors","Unresolved Staff Comments","Properties","Legal Proceedings","Mine Safety Disclosures","Management’s Discussion and Analysis of Financial Condition and Results of Operations","Quantitative and Qualitative Disclosures About Market Risk","Financial Statements and Supplementary Data","Changes in and Disagreements with Accountants on Accounting and Financial Disclosure","Controls and Procedures","Other Information","Disclosure Regarding Foreign Jurisdictions that Prevent Inspections","Directors, Executive Officers and Corporate Governance","Executive Compensation","Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters","Certain Relationships and Related Transactions, and Director Independence","Principal Accountant Fees and Services","Exhibits and Financial Statement Schedules","Form 10-K Summary"]:
             #continue
 
         if(len(current_toc_heading_page_numbers["pdf_page_num"])>0):
@@ -508,8 +510,8 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
             
             #print(f"\n Current heading is :{heading}\n")
             subheadings_within_heading_dict=extract_subheadings(doc, current_toc_heading_page_numbers["starting_page_num"], current_toc_heading_page_numbers["ending_page_num"],current_toc_heading.strip(), next_toc_heading.strip())
-            #print(f"\nsubheadings within the heading {heading}")
-            #pprint(subheadings_within_heading_dict)
+            print(f"\nsubheadings within the heading {heading}")
+            pprint(subheadings_within_heading_dict)
             
             filter_1_possible_subheadings_dict={}
             
@@ -522,7 +524,8 @@ def extract_subheadings_and_their_text(doc,all_headings_status_dict):
 
             #TODO:remove this later
             #break
-    
+            
+    return extracted_text_dict
 
 
 #15.
@@ -734,7 +737,7 @@ def extract_subheadings(doc,starting_page_num,ending_page_num,current_toc_headin
                             #print(f"next toc not found currently {text}")
                         
 
-                        if start_finding_subheadings:
+                        if start_finding_subheadings and text.lower() not in [company_name,"report of independent registered public accounting firm", "to the board of directors and stockholders of"]:
                             #print(f"\ncurrent span text is {text}hello and font style is {font} and flags are {flags}\n")
                             #print(text)
                             #print(start_finding_subheadings)
@@ -923,11 +926,21 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
             for l in b["lines"]:
                 for s in l["spans"]:
                     text=s["text"]
-                    if re.findall(regex_for_toc_heading,text.strip()):
+                    text=text.strip()
+                    font=s["font"].split(",")
+                    temp_font=[]
+                    for f in font:
+                        temp_font.append(f.lower().strip())
+                    
+                    font.clear()
+                    font.extend(temp_font)
+
+
+                    if (re.findall(regex_for_toc_heading,text.strip()) or text in toc_heading ) and re.search(r"bold[\w\s]*","//".join(font)):
                         start_recording_text=True
                         main_heading_found=True
                         continue
-                    if re.findall(r""+first_subheading,text.strip()):
+                    if (re.findall(r""+first_subheading,text.strip()) or text in first_subheading) and re.search(r"bold[\w\s]*","//".join(font)): 
                         start_recording_text=False
 
                     if start_recording_text:
@@ -940,8 +953,8 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
 
     else:
         
-        #TODO:when there are no subheadings but text needs to be extracted
-        print("no subheadings for this heading")
+        #:when there are no subheadings but text needs to be extracted
+        #print("no subheadings for this heading")
 
         text_between_two_toc_headings_and_no_subheadings=""
 
@@ -970,9 +983,11 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
                     if re.search(regex_for_toc_heading,text):
                         start_recording_text=True
                         continue
-                    elif re.search(regex_for_next_toc_heading,text) and re.search(r"bold[\w\s]*","//".join(font)):
+                    elif (re.search(regex_for_next_toc_heading,text) or text in next_toc_heading) and re.search(r"bold[\w\s]*","//".join(font)):
                         start_recording_text=False
-                        print(f"found the next TOC heading")
+                        #print(f"found the next TOC heading")
+                    #else:
+                        #print(text)
                     
                     if start_recording_text:
                         text_between_two_toc_headings_and_no_subheadings+=text+" "
@@ -1035,12 +1050,20 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
                         for l in b["lines"]:
                             for s in l["spans"]:
                                 text=s["text"].strip()
-                                if re.findall(r""+current_subheading,text):
+                                font= s["font"].split(",")
+                                temp_font=[]
+                                for f in font:
+                                    temp_font.append(f.lower().strip())
+                                font.clear()
+                                font.extend(temp_font)
+
+                                if re.findall(r""+current_subheading,text) or (current_subheading in text and re.search(r"bold[\w\s]*","//".join(font)) ):
                                     #print(f"found the current subheading: {text}")
                                     start_recording_text=True
                                     continue
-                                elif re.findall(r""+next_subheading,text):
+                                elif re.findall(r""+next_subheading,text) or (next_subheading in text and re.search(r"bold[\w\s]*","//".join(font))):
                                     start_recording_text=False
+                                
 
                                 if start_recording_text :
                                     text_between_subheadings+=text+" "
@@ -1106,10 +1129,10 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
 
             #TODO:last index for the heading      
             elif index==len(all_page_numbers_array)-1:
-                #print("last index.I am here")
+                print("last index.I am here")
                 current_element_in_dict=subheading_dict[all_page_numbers_array[index]]
                 current_subheading_starting_page_num=all_page_numbers_array[index]
-                #print(current_heading)
+                #print(current_element_in_dict)
 
                 for index_subheading,subheading in enumerate(current_element_in_dict):
                     current_subheading= subheading
@@ -1151,6 +1174,10 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
                                     #print(f"found the current subheading: {text}")
                                     start_recording_text=True
                                     continue
+
+                                elif re.findall(r""+next_subheading,text) or (next_subheading in text and re.search(r"bold[\w\s]*","//".join(font))):
+                                    start_recording_text=False
+
                                 elif re.search(regex_for_next_toc_heading,text) and re.search(r"bold[\w\s]*","//".join(font)):
                                     start_recording_text=False
                                     #print(f"found the next TOC heading")
@@ -1159,11 +1186,25 @@ def extract_text_within_subheading(doc,subheading_dict,toc_heading,toc_heading_p
 
                                 if start_recording_text :
                                     last_subheading_text+=text+" "
-                #print(last_subheading_text)
-                extracted_text_for_toc_heading_array.append({current_subheading:last_subheading_text})
-    print(extracted_text_for_toc_heading_array)
+                    #print(last_subheading_text)
+                    #print(current_subheading)
+                    extracted_text_for_toc_heading_array.append({current_subheading:last_subheading_text})
+    #print(extracted_text_for_toc_heading_array)
+    return extracted_text_for_toc_heading_array
 
-       
+#21. write to file to check the output
+def write_output_to_a_file(output):
+    '''
+    f= open("./file_output/toc_heading_5.txt","w")
+    f.write(str(output))
+
+    f.close()
+    print("write finished")
+    '''
+    with open("./file_output/output.json", "w") as json_file:
+        json.dump(output, json_file, indent=4)
+        print("write finished")
+
 '''
 ######################################################################################################################################################################
                                                                                     ACTUAL IMPLEMENTATION
@@ -1197,11 +1238,12 @@ if(dict_for_current_pdf !=None):
     headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
 
     #go to the pages with the headings and extract subheadings
-    extract_subheadings_and_their_text(doc,headings_status_dict)
+    extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
+    write_output_to_a_file(extracted_text)
 else:
     print("no table of contents present for the pdf")
 
-#Calculate the offset
+
 '''=======
 def extract_data_from_pdf(pdf_path):
     print(pdf_path)

@@ -62,53 +62,12 @@
         "documentation": {}
     },
     {
-        "label": "PyPDF2",
+        "label": "requests",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "PyPDF2",
-        "description": "PyPDF2",
-        "detail": "PyPDF2",
-        "documentation": {}
-    },
-    {
-        "label": "word_tokenize",
-        "importPath": "nltk.tokenize",
-        "description": "nltk.tokenize",
-        "isExtraImport": true,
-        "detail": "nltk.tokenize",
-        "documentation": {}
-    },
-    {
-        "label": "nltk",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "nltk",
-        "description": "nltk",
-        "detail": "nltk",
-        "documentation": {}
-    },
-    {
-        "label": "pos_tag",
-        "importPath": "nltk",
-        "description": "nltk",
-        "isExtraImport": true,
-        "detail": "nltk",
-        "documentation": {}
-    },
-    {
-        "label": "stopwords",
-        "importPath": "nltk.corpus",
-        "description": "nltk.corpus",
-        "isExtraImport": true,
-        "detail": "nltk.corpus",
-        "documentation": {}
-    },
-    {
-        "label": "WordNetLemmatizer",
-        "importPath": "nltk.stem",
-        "description": "nltk.stem",
-        "isExtraImport": true,
-        "detail": "nltk.stem",
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
         "documentation": {}
     },
     {
@@ -126,6 +85,15 @@
         "description": "utils.nltk_utlis",
         "isExtraImport": true,
         "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "nltk",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "nltk",
+        "description": "nltk",
+        "detail": "nltk",
         "documentation": {}
     },
     {
@@ -175,6 +143,14 @@
         "description": "main.chat",
         "isExtraImport": true,
         "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "extract_pdf_from_url",
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "isExtraImport": true,
+        "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
     {
@@ -376,129 +352,39 @@
         "documentation": {}
     },
     {
+        "label": "download_pdf",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def download_pdf(url):\n    save_folder = \"../PDFExtraction/pdfs\"\n    response = requests.get(url)\n    if not os.path.exists(save_folder):\n        os.makedirs(save_folder)\n    file_name = url.split('/')[-1]\n    save_path = os.path.join(save_folder, file_name)\n    with open(save_path, 'wb') as f:\n        f.write(response.content)\n    print(f\"PDF downloaded and saved to {save_path}\")",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_data_from_pdf",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_data_from_pdf(pdf_path):\n    print(pdf_path)\n    doc=fitz.open(pdf_path)\n    toc_page_num_array=get_table_of_contents_page_number(doc)\n    print(\"page num\")\n    print(toc_page_num_array)\n    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)\n    if(dict_for_current_pdf !=None):\n        print(\"DICTIONARY FOR CURRENT PDF IS\\n\")\n        pprint(dict_for_current_pdf)",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
+        "label": "extract_pdf_from_url",
+        "kind": 2,
+        "importPath": "PDFExtraction.extract_pdf",
+        "description": "PDFExtraction.extract_pdf",
+        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\n#Single PDFs testing\n# doc=fitz.open(os.path.join(directory,all_pdfs[0]))\n# doc=fitz.open(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n# print(\"DOCCC\\n\")\n# print(doc)\n# doc= fitz.open(\"../PDFExtraction/pdfs/AnnualReport1.pdf\")\n#doc= fitz.open(\"../PDFExtraction/pdfs/abbott_2023_annual_report.pdf\")",
+        "detail": "PDFExtraction.extract_pdf",
+        "documentation": {}
+    },
+    {
         "label": "extract_data_from_pdf",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
         "peekOfCode": "def extract_data_from_pdf(pdf_path):\n    print(pdf_path)\n    doc=fitz.open(pdf_path)\n    toc_page_num=get_table_of_contents_page_number(doc)\n    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num,doc)\n    if(dict_for_current_pdf !=None):\n        print(\"DICTIONARY FOR CURRENT PDF IS\\n\")\n        print(dict_for_current_pdf)\nextract_data_from_pdf()\n'''",
         "detail": "PDFExtraction.extract_pdf",
-        "documentation": {}
-    },
-    {
-        "label": "extract_text_from_pdf",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "def extract_text_from_pdf(pdf_path):\n    text = \"\"\n    with open(pdf_path, 'rb') as file:\n        reader = PyPDF2.PdfReader(file)\n        num_pages = len(reader.pages)\n        for page_num in range(num_pages):\n            page = reader.pages[page_num]\n            text += page.extract_text()\n    return text\ndef preprocess_text(text):",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "preprocess_text",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "def preprocess_text(text):\n    # Remove newline characters and extra whitespaces\n    text = text.replace('\\n', ' ').strip()\n    # Remove non-breaking spaces\n    text = text.replace('\\xa0', ' ')\n    return text\ndef extract_financial_figures(text):\n    # Define regular expressions to match financial figures\n    regex_currency = r'\\$\\s?\\d+(?:,\\d+)*(?:\\.\\d+)?'  # Matches currency amounts ($X,XXX.XX)\n    regex_percentage = r'\\d+(?:\\.\\d+)?\\s?%'  # Matches percentage values (X.XX%)",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "extract_financial_figures",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "def extract_financial_figures(text):\n    # Define regular expressions to match financial figures\n    regex_currency = r'\\$\\s?\\d+(?:,\\d+)*(?:\\.\\d+)?'  # Matches currency amounts ($X,XXX.XX)\n    regex_percentage = r'\\d+(?:\\.\\d+)?\\s?%'  # Matches percentage values (X.XX%)\n    regex_numbers = r'\\d+(?:,\\d+)*(?:\\.\\d+)?'  # Matches numbers with optional commas and decimals\n    # Find all matches of currency amounts, percentages, and numbers\n    currencies = re.findall(regex_currency, text)\n    percentages = re.findall(regex_percentage, text)\n    numbers = re.findall(regex_numbers, text)\n    return currencies, percentages, numbers",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "pdf_path",
-        "kind": 5,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "pdf_path = directory  # Replace 'example.pdf' with the path to your PDF file\npdf_text = extract_text_from_pdf(pdf_path)\n# Example usage:\npreprocessed_text = preprocess_text(pdf_text)\nprint(preprocessed_text)\n# currencies, percentages, numbers = extract_financial_figures(preprocessed_text)\n# print(\"Currencies:\", currencies)\n# print(\"Percentages:\", percentages)\n# print(\"Numbers:\", numbers)",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "pdf_text",
-        "kind": 5,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "pdf_text = extract_text_from_pdf(pdf_path)\n# Example usage:\npreprocessed_text = preprocess_text(pdf_text)\nprint(preprocessed_text)\n# currencies, percentages, numbers = extract_financial_figures(preprocessed_text)\n# print(\"Currencies:\", currencies)\n# print(\"Percentages:\", percentages)\n# print(\"Numbers:\", numbers)",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "preprocessed_text",
-        "kind": 5,
-        "importPath": "PDFExtraction.extract_pdf_v2",
-        "description": "PDFExtraction.extract_pdf_v2",
-        "peekOfCode": "preprocessed_text = preprocess_text(pdf_text)\nprint(preprocessed_text)\n# currencies, percentages, numbers = extract_financial_figures(preprocessed_text)\n# print(\"Currencies:\", currencies)\n# print(\"Percentages:\", percentages)\n# print(\"Numbers:\", numbers)",
-        "detail": "PDFExtraction.extract_pdf_v2",
-        "documentation": {}
-    },
-    {
-        "label": "preprocess_text",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "def preprocess_text(text):\n    # Convert text to lowercase\n    text = text.lower()\n    # Remove special characters, numbers, and punctuation\n    text = re.sub(r'[^a-zA-Z\\s]', '', text)\n    # Tokenize text\n    tokens = word_tokenize(text)\n    # Remove stop words\n    stop_words = set(stopwords.words('english'))\n    filtered_tokens = [token for token in tokens if token not in stop_words]",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "extract_headings",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "def extract_headings(text):\n    headings = []\n    for sentence in text.split('\\n'):\n        if len(sentence) > 0 and sentence.isupper():  # Assuming headings are in all uppercase\n            headings.append(sentence.strip())\n    return headings\n# Function to extract headings recursively from preprocessed text\ndef extract_headings_recursive(text):\n    headings = []\n    for sentence in text.split('\\n'):",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "extract_headings_recursive",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "def extract_headings_recursive(text):\n    headings = []\n    for sentence in text.split('\\n'):\n        if len(sentence) > 0 and sentence.isupper():  # Assuming headings are in all uppercase\n            headings.append(sentence.strip())\n            # Extract subheadings recursively\n            subheadings = extract_headings_recursive(sentence)\n            if subheadings:\n                headings.extend(subheadings)\n    return headings",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "extract_text_from_pdf",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "def extract_text_from_pdf(pdf_path):\n    text = \"\"\n    with open(pdf_path, 'rb') as file:\n        reader = PyPDF2.PdfReader(file)\n        num_pages = len(reader.pages)\n        for page_num in range(num_pages):\n            page = reader.pages[page_num]\n            text += page.extract_text()\n    return text\n# Function to extract useful data from headings",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "extract_data_from_headings",
-        "kind": 2,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "def extract_data_from_headings(pdf_path):\n    text = extract_text_from_pdf(pdf_path)\n    print(text)\n    preprocessed_text = preprocess_text(text)\n    headings = extract_headings_recursive(preprocessed_text)\n    return headings\n# Example usage\npdf_path = os.getcwd()+\"/pdfs/AnnualReport1.pdf\"\nheadings = extract_data_from_headings(pdf_path)\nprint(headings)",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "pdf_path",
-        "kind": 5,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "pdf_path = os.getcwd()+\"/pdfs/AnnualReport1.pdf\"\nheadings = extract_data_from_headings(pdf_path)\nprint(headings)",
-        "detail": "PDFExtraction.extract_pdf_v3",
-        "documentation": {}
-    },
-    {
-        "label": "headings",
-        "kind": 5,
-        "importPath": "PDFExtraction.extract_pdf_v3",
-        "description": "PDFExtraction.extract_pdf_v3",
-        "peekOfCode": "headings = extract_data_from_headings(pdf_path)\nprint(headings)",
-        "detail": "PDFExtraction.extract_pdf_v3",
         "documentation": {}
     },
     {
@@ -614,7 +500,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    get_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)",
+        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}",
         "detail": "app",
         "documentation": {}
     },
@@ -623,7 +509,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    get_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():\n    text = request.get_json().get(\"message\")",
+        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():",
         "detail": "app",
         "documentation": {}
     },

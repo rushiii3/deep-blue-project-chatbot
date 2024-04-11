@@ -4,6 +4,8 @@ import spacy
 import os
 from pprint import pprint 
 import json
+import requests
+
 nlp=spacy.load("en_core_web_sm")
 company_name="pdf solutions, inc."
 
@@ -1205,16 +1207,80 @@ def write_output_to_a_file(output):
         json.dump(output, json_file, indent=4)
         print("write finished")
 
+#22. Download the pdf from url and save to the pds folder
+def download_pdf(url):
+    save_folder = "../PDFExtraction/pdfs"
+    response = requests.get(url)
+    if not os.path.exists(save_folder):
+        os.makedirs(save_folder)
+    file_name = url.split('/')[-1]
+    save_path = os.path.join(save_folder, file_name)
+    with open(save_path, 'wb') as f:
+        f.write(response.content)
+    print(f"PDF downloaded and saved to {save_path}")
+    return save_path
+
+
 '''
 ######################################################################################################################################################################
                                                                                     ACTUAL IMPLEMENTATION
 ######################################################################################################################################################################
 
 '''
-directory="../PDFExtraction/pdfs"
-all_pdfs=os.listdir(directory)
-print(all_pdfs)
+
+# directory="../PDFExtraction/pdfs"
+# all_pdfs=os.listdir(directory)
+# print(all_pdfs)
 all_toc_dicts={}
+# doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")
+# toc_page_num_array=get_table_of_contents_page_number(doc)
+# dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
+
+
+# if(dict_for_current_pdf !=None):
+#     print("DICTIONARY FOR CURRENT PDF IS\n")
+#     pprint(dict_for_current_pdf)
+
+#     #get the pdf page number along with the Table of Contents Page number
+#     headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
+
+#     #go to the pages with the headings and extract subheadings
+#     extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
+#     write_output_to_a_file(extracted_text)
+# else:
+#     print("no table of contents present for the pdf")
+
+
+
+def extract_data_from_pdf(pdf_path):
+    print(pdf_path)
+    doc=fitz.open(pdf_path)
+    toc_page_num_array=get_table_of_contents_page_number(doc)
+    print("page num")
+    print(toc_page_num_array)
+    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
+    if(dict_for_current_pdf !=None):
+        print("DICTIONARY FOR CURRENT PDF IS\n")
+        pprint(dict_for_current_pdf)
+
+        #get the pdf page number along with the Table of Contents Page number
+        headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
+
+        #go to the pages with the headings and extract subheadings
+        extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
+        write_output_to_a_file(extracted_text)
+    else:
+        print("no table of contents present for the pdf")
+
+# API 
+def extract_pdf_from_url(url):
+    pdf_saved_path = download_pdf(url)
+    extract_data_from_pdf(pdf_saved_path)
+
+
+
+
+
 
 #Single PDFs testing
 # doc=fitz.open(os.path.join(directory,all_pdfs[0]))
@@ -1222,27 +1288,32 @@ all_toc_dicts={}
 
 # print("DOCCC\n")
 # print(doc)
-doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
+
+
+# doc= fitz.open("../PDFExtraction/pdfs/AnnualReport1.pdf")
 #doc= fitz.open("../PDFExtraction/pdfs/abbott_2023_annual_report.pdf")
 #for testing, it is a dict of all pdfs and their analyzed table of contents which is in a dict
-#doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")
-toc_page_num_array=get_table_of_contents_page_number(doc)
-dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
+# doc=fitz.open("../PDFExtraction/pdfs/coca_cola_ar_2023.pdf")
+# toc_page_num_array=get_table_of_contents_page_number(doc)
+# dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
 
 
-if(dict_for_current_pdf !=None):
-    print("DICTIONARY FOR CURRENT PDF IS\n")
-    pprint(dict_for_current_pdf)
+# if(dict_for_current_pdf !=None):
+#     print("DICTIONARY FOR CURRENT PDF IS\n")
+#     pprint(dict_for_current_pdf)
 
-    #get the pdf page number along with the Table of Contents Page number
-    headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
+#     #get the pdf page number along with the Table of Contents Page number
+#     headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
 
-    #go to the pages with the headings and extract subheadings
-    extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
-    write_output_to_a_file(extracted_text)
-else:
-    print("no table of contents present for the pdf")
+#     #go to the pages with the headings and extract subheadings
+#     extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
+#     write_output_to_a_file(extracted_text)
+# else:
+#     print("no table of contents present for the pdf")
 
+
+
+# extract_data_from_pdf("../PDFExtraction/pdfs/AnnualReport1.pdf")
 
 '''=======
 def extract_data_from_pdf(pdf_path):

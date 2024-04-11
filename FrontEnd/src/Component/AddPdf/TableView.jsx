@@ -15,36 +15,54 @@ import { useFinanceStore, useLoader } from "../../Store/Store";
 
 const TableView = () => {
   const { loading, setLoading } = useLoader();
-    const {FinanceData, setFinanceData} = useFinanceStore();
+  const { FinanceData, setFinanceData } = useFinanceStore();
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  
   useEffect(() => {
+
+
+    
     const getData = async () => {
       setLoading(true);
       try {
-        // Simulate a delay of 2 seconds before making the API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
         const { data } = await axios.get(`${link}/get-data`);
         if (data.success) {
           setFinanceData(data.data);
-          console.log(data.data);
+          if (data.data) {
+            console.log(data.data);
+            const selected = data.data
+              .filter((value) => value?.isSelected)
+              .map((value) => value?._id);
+            const updatedSelectedKeys = new Set(selected);
+            setSelectedKeys(updatedSelectedKeys);
+
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        // Ensure setLoading is always set to false after the API call, even if an error occurs
         setLoading(false);
       }
     };
 
     getData();
   }, []);
-
+  const handleSelection = (e) => {
+    console.log(e);
+    setSelectedKeys(e)
+    console.log("old",selectedKeys);
+  }
   return (
     <Table
       aria-label="Example static collection table"
       classNames={{
         wrapper: "max-h-[382px]",
       }}
+      selectionMode="single"
+      color="primary"
+      defaultSelectedKeys={selectedKeys}
+      onSelectionChange={handleSelection}
+      selectedKeys={selectedKeys}
     >
       <TableHeader>
         <TableColumn>NAME</TableColumn>
@@ -52,26 +70,29 @@ const TableView = () => {
         <TableColumn>ACTION</TableColumn>
       </TableHeader>
       {loading ? (
-  <TableBody isLoading={loading} loadingContent={<Spinner label="Loading..." />} />
-) : (
-  FinanceData && FinanceData.length > 0 ? (
-    <TableBody isLoading={loading}>
-      {FinanceData.map((value, key) => (
-        <TableRow key={key}>
-          <TableCell>{value.filename}</TableCell>
-          <TableCell>{value.financial_year}</TableCell>
-          <TableCell>
-            <Actions data={value} setFinanceData={setFinanceData} FinanceData={FinanceData} />
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  ) : (
-    <TableBody emptyContent={"No rows to display."} />
-  )
-)}
-
-
+        <TableBody
+          isLoading={loading}
+          loadingContent={<Spinner label="Loading..." />}
+        />
+      ) : FinanceData && FinanceData.length > 0 ? (
+        <TableBody isLoading={loading}>
+          {FinanceData.map((value, key) => (
+            <TableRow key={value?._id}>
+              <TableCell>{value.filename.slice(0, -4)}</TableCell>
+              <TableCell>{value.financial_year}</TableCell>
+              <TableCell>
+                <Actions
+                  data={value}
+                  setFinanceData={setFinanceData}
+                  FinanceData={FinanceData}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      ) : (
+        <TableBody emptyContent={"No rows to display."} />
+      )}
     </Table>
   );
 };

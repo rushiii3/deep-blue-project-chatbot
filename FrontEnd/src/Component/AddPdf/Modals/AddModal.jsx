@@ -73,7 +73,8 @@ const AddModal = () => {
         toast.success("Your report has been added", {
           id: toastId,
         });
-        setFinanceData([...FinanceData,response.data.upload]);
+
+        setFinanceData([...FinanceData,response.data.uploads]);
       }
     } catch (error) {
       toast.error(error.message, {

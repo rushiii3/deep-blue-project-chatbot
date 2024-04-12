@@ -257,7 +257,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def calculate_offset(toc_dict_array, doc,toc_page_num):\n   #go through each page and then check for the word on that page\n   for toc_dict in toc_dict_array:\n    all_headings_status_dict={}\n    #iterate over the dictionary\n    for heading,page_num in toc_dict.items():\n        #print(page_num, heading)\n        all_headings_status_dict[heading]={\"toc_page_num\":page_num,\"pdf_page_num\":[],\"offset\":0}\n        regex_for_current_heading=r''+heading.strip()+'\\s*(?![\\w\\d])'\n       # print(f\"regex is :{regex_for_current_heading}\")",
+        "peekOfCode": "def calculate_offset(toc_dict_array, doc,toc_page_num_array):\n   #go through each page and then check for the word on that page\n   for toc_dict in toc_dict_array:\n    all_headings_status_dict={}\n    #iterate over the dictionary\n    for heading,page_num in toc_dict.items():\n        #print(page_num, heading)\n        all_headings_status_dict[heading]={\"toc_page_num\":page_num,\"pdf_page_num\":[],\"offset\":0}\n        regex_for_current_heading=r''+heading.strip()+'\\s*(?![\\w\\d])'\n       # print(f\"regex is :{regex_for_current_heading}\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -356,7 +356,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def download_pdf(url):\n    save_folder = \"../PDFExtraction/pdfs\"\n    response = requests.get(url)\n    if not os.path.exists(save_folder):\n        os.makedirs(save_folder)\n    file_name = url.split('/')[-1]\n    save_path = os.path.join(save_folder, file_name)\n    with open(save_path, 'wb') as f:\n        f.write(response.content)\n    print(f\"PDF downloaded and saved to {save_path}\")",
+        "peekOfCode": "def download_pdf(url):\n    save_folder = \"../PDFExtraction/downloaded_pdfs\"\n    response = requests.get(url)\n    if not os.path.exists(save_folder):\n        os.makedirs(save_folder)\n    file_name = url.split('/')[-1]\n    save_path = os.path.join(save_folder, file_name)\n    with open(save_path, 'wb') as f:\n        f.write(response.content)\n    print(f\"PDF downloaded and saved to {save_path}\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -374,7 +374,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\n#Single PDFs testing\n# doc=fitz.open(os.path.join(directory,all_pdfs[0]))\n# doc=fitz.open(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n# print(\"DOCCC\\n\")\n# print(doc)\n# doc= fitz.open(\"../PDFExtraction/pdfs/AnnualReport1.pdf\")\n#doc= fitz.open(\"../PDFExtraction/pdfs/abbott_2023_annual_report.pdf\")",
+        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION\n######################################################################################################################################################################\n'''\n# directory=\"../PDFExtraction/pdfs\"\n# all_pdfs=os.listdir(directory)",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },

@@ -1203,6 +1203,7 @@ def write_output_to_a_file(output):
     f.close()
     print("write finished")
     '''
+    print(output)
     with open("./file_output/output.json", "w") as json_file:
         json.dump(output, json_file, indent=4)
         print("write finished")
@@ -1245,6 +1246,8 @@ def extract_data_from_pdf(pdf_path):
 def extract_pdf_from_url(url):
     pdf_saved_path = download_pdf(url)
     extract_data_from_pdf(pdf_saved_path)
+extract_pdf_from_url("https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf")
+
 '''
 ######################################################################################################################################################################
                                                                                     ACTUAL IMPLEMENTATION

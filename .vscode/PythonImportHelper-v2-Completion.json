@@ -347,7 +347,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)\n        print(\"write finished\")",
+        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -374,7 +374,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION\n######################################################################################################################################################################\n'''\n# directory=\"../PDFExtraction/pdfs\"\n# all_pdfs=os.listdir(directory)",
+        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\nextract_pdf_from_url(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION\n######################################################################################################################################################################\n'''\n# directory=\"../PDFExtraction/pdfs\"",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },

@@ -1,0 +1,78 @@
+user_query,main_heading,subheading
+What are the sources of revenue for our organization,business,business_overview
+Which companies are our customers,business,business_overview
+Where is our headquarters located,business,business_overview
+How do our foundry customers utilize our solutions,business,business_overview
+How has the company expanded its technology footprint and operations over the years,business,brief_history
+What was the focus of the company from 2009 to 2019,business,brief_history
+How has the company leveraged its experience in yield simulation software and test chip development,business,brief_history
+Can you describe the research and development efforts undertaken by the company in recent years,business,brief_history
+What factors contribute to the growth of the industry,business,industry_background
+How has the industry evolved over time,business,industry_background
+What are the main challenges faced by companies in this industry,business,industry_background
+What are the key market trends impacting the industry,business,industry_background
+How does the company protect its intellectual property while collaborating with partners and customers,business,technology_and_intellectual_property_protection
+Can you elaborate on the methodologies used by the company's implementation teams to drive customer adoption of its technology,business,technology_and_intellectual_property_protection
+What steps does the company take to identify and address potential vulnerabilities in its intellectual property protection strategy,business,technology_and_intellectual_property_protection
+How does the company handle potential infringement of its intellectual property rights,business,technology_and_intellectual_property_protection
+What are the main products offered by the company,business,products_and_services
+Can you describe the range of services provided by the company,business,products_and_services
+How does the company ensure the quality of its products,business,products_and_services
+What sets the company's products apart from competitors,business,products_and_services
+What is the company's approach to sales and marketing,business,sales_and_marketing
+How does the company identify and target its key customer segments,business,sales_and_marketing
+What channels does the company use to reach its target audience,business,sales_and_marketing
+Can you describe the company's branding strategy,business,sales_and_marketing
+What is the focus of the company's research and development efforts,business,research_and_development
+Which proprietary technologies does the company prioritize in its R&D,business,research_and_development
+Can you provide examples of the company's proprietary technologies,business,research_and_development
+How does the company use a rapid-prototyping paradigm in its R&D process,business,research_and_development
+What are the key factors driving competition in the semiconductor industry,business,competition
+How does the company differentiate itself from competitors in the market,business,competition
+Can you explain the impact of evolving standards on market competition,business,competition
+What strategies does the company employ to address short product life cycles,business,competition
+How does the company enhance network security measures to protect critical information,business,information_security_and_risk
+What policies and procedures are implemented as part of the InfoSec Program,business,information_security_and_risk
+Can you elaborate on the annual information security awareness training for employees,business,information_security_and_risk
+What measures are taken to ensure the availability of critical data and systems,business,information_security_and_risk
+How does the company integrate environmental considerations into its business strategy,business,environmental_social_and_governance_matters
+Can you provide details about the company's environmental sustainability initiatives,business,environmental_social_and_governance_matters
+What measures are in place to reduce the company's carbon footprint,business,environmental_social_and_governance_matters
+How does the company manage its energy consumption and promote energy efficiency,business,environmental_social_and_governance_matters
+How does the company promote business ethics and integrity within the organization,business,human_capital_management
+What specific actions are being taken to strengthen diversity and inclusion programs,business,human_capital_management
+How does the company ensure that its business practices support diversity and inclusion,business,human_capital_management
+Can you elaborate on the annual charitable giving campaign organized by the company,business,human_capital_management
+who is the CEO of the company,business,information_about_our_executive_officers
+who is the director of the company,business,information_about_our_executive_officers
+who is the President of the company,business,information_about_our_executive_officers
+who is the vice president of the company,business,information_about_our_executive_officers
+Where can investors access various reports filed by the company with the SEC,business,available_information
+What types of reports can be obtained for free on the company's website,business,available_information
+When are the reports typically made available on the company's website,business,available_information
+Where can additional information about the company be found online,business,available_information
+What significant resources have been invested in by the company,risk_factors,risks_associated_with_our_business
+What potential impacts could occur if initiatives are not carried out successfully,risk_factors,risks_associated_with_our_business
+What substantial investments have been made in research and development efforts,risk_factors,risks_associated_with_our_business
+What factors may require the company to invest significantly greater resources,risk_factors,risks_associated_with_our_business
+What risks are associated with failing to protect intellectual property rights,risk_factors,risks_related_to_our_technology
+How does the company manage risks related to data privacy and security regulations,risk_factors,risks_related_to_our_technology
+What potential impacts could failure to comply with data privacy laws have on the company,risk_factors,risks_related_to_our_technology
+What laws and regulations govern the processing of personal information by the company,risk_factors,risks_related_to_our_technology
+How do past due balances from customers affect the company's cash flow,risk_factors,risks_related_to_our_operations
+What are the implications of customers failing to pay receivable balances,risk_factors,risks_related_to_our_operations
+How does the company manage accounts receivable reserves,risk_factors,risks_related_to_our_operations
+What factors contribute to the impact of the COVID-19 pandemic on the company's operations,risk_factors,risks_related_to_our_operations
+What factors could affect the company's future tax rates,risk_factors,tax_risks
+How does the company handle audits by taxing authorities,risk_factors,tax_risks
+What potential effects could additional taxes assessed in an audit have on the company's operating results,risk_factors,tax_risks
+How does the company manage transfer pricing adjustments and their impact on its effective tax rate,risk_factors,tax_risks
+How does the company manage liabilities associated with acquisitions,risk_factors,risks_related_to_our_strategic_transactions
+What challenges does the company face in protecting and enforcing IP rights of acquired businesses,risk_factors,risks_related_to_our_strategic_transactions
+How does the company evaluate the potential dilution of ownership from issuing common stock in acquisitions,risk_factors,risks_related_to_our_strategic_transactions
+What impact do acquisitions have on the company's cash resources,risk_factors,risks_related_to_our_strategic_transactions
+What challenges does the company face in obtaining visas for its foreign national employees,risk_factors,general_risk_factors
+How could increased scrutiny in granting business visas impact the company's operations,risk_factors,general_risk_factors
+What are the potential consequences if the company loses the services of key executives or engineers,risk_factors,general_risk_factors
+What impact does the fluctuation of earnings per share and other operating results have on investors' expectations,risk_factors,general_risk_factors
+

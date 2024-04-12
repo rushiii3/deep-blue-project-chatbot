@@ -163,6 +163,14 @@
     },
     {
         "label": "insert_extract_db",
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "isExtraImport": true,
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
+        "label": "insert_extract_db",
         "kind": 2,
         "importPath": "Database_Module.main",
         "description": "Database_Module.main",
@@ -391,7 +399,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)",
+        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    save_path = os.getcwd()+\"/PDFExtraction/file_output/output.json\"\n    print(os.getcwd()+\"/PDFExtraction/file_output/output.json\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -409,7 +417,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def extract_data_from_pdf(pdf_path):\n    print(pdf_path)\n    doc=fitz.open(pdf_path)\n    toc_page_num_array=get_table_of_contents_page_number(doc)\n    print(\"page num\")\n    print(toc_page_num_array)\n    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)\n    if(dict_for_current_pdf !=None):\n        print(\"DICTIONARY FOR CURRENT PDF IS\\n\")\n        pprint(dict_for_current_pdf)",
+        "peekOfCode": "def extract_data_from_pdf(pdf_path):\n    print(pdf_path)\n    doc=fitz.open(pdf_path)\n    toc_page_num_array=get_table_of_contents_page_number(doc)\n    print(\"page num\")\n    # print(toc_page_num_array)\n    dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)\n    if(dict_for_current_pdf !=None):\n        print(\"DICTIONARY FOR CURRENT PDF IS\\n\")\n        # pprint(dict_for_current_pdf)",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -418,7 +426,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\nextract_pdf_from_url(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION\n######################################################################################################################################################################\n'''\n# directory=\"../PDFExtraction/pdfs\"",
+        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extracted_text = extract_data_from_pdf(pdf_saved_path)\n    print(extracted_text)\n    return extracted_text\n    print(\"Done extracedddd\")\n# extract_pdf_from_url(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -544,7 +552,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}",
+        "peekOfCode": "def hello():\n    return jsonify({'message': 'Hello, World!'})\n# API route for extraction\n@app.route('/api/extraction',methods=['POST'])\ndef extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract = extract_pdf_from_url(url)\n    insert_extract_db(extract,id)",
         "detail": "app",
         "documentation": {}
     },
@@ -553,7 +561,7 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract_pdf_from_url(url)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])\ndef predict():",
+        "peekOfCode": "def extract_pdf():\n    print(\"yeee\")\n    url = request.get_json().get(\"url\")\n    id = request.get_json().get(\"id\")\n    extract = extract_pdf_from_url(url)\n    insert_extract_db(extract,id)\n    message = {\"message\": \"Your url reached!!\",\"url\":url}\n    return jsonify(message)\n# API route for prediction\n@app.route('/api/predict',methods=['POST'])",
         "detail": "app",
         "documentation": {}
     },

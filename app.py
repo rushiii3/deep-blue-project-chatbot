@@ -13,6 +13,7 @@ from flask import Flask, jsonify, request
 # get_response is accessed from the chat folder
 from main.chat import get_response
 from PDFExtraction.extract_pdf import extract_pdf_from_url
+from Database_Module.main import insert_extract_db
 app = Flask(__name__)
 
 
@@ -27,7 +28,8 @@ def extract_pdf():
     print("yeee")
     url = request.get_json().get("url")
     id = request.get_json().get("id")
-    extract_pdf_from_url(url)
+    extract = extract_pdf_from_url(url)
+    insert_extract_db(extract,id)
     message = {"message": "Your url reached!!","url":url}
     return jsonify(message)
 

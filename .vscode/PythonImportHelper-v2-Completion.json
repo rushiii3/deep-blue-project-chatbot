@@ -1,11 +1,19 @@
 [
     {
-        "label": "mongo",
+        "label": "ObjectId",
+        "importPath": "bson",
+        "description": "bson",
+        "isExtraImport": true,
+        "detail": "bson",
+        "documentation": {}
+    },
+    {
+        "label": "pymongo",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "mongo",
-        "description": "mongo",
-        "detail": "mongo",
+        "importPath": "pymongo",
+        "description": "pymongo",
+        "detail": "pymongo",
         "documentation": {}
     },
     {
@@ -154,6 +162,42 @@
         "documentation": {}
     },
     {
+        "label": "insert_extract_db",
+        "kind": 2,
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "peekOfCode": "def insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")\n        else:\n            # Update the document",
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
+        "label": "myclient",
+        "kind": 5,
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "peekOfCode": "myclient = pymongo.MongoClient('mongodb+srv://hrushiop:oq16yL7AoXMn1c3x@cluster0.h4boskd.mongodb.net/')\nmydb = myclient['test']\nmycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:",
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
+        "label": "mydb",
+        "kind": 5,
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "peekOfCode": "mydb = myclient['test']\nmycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")",
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
+        "label": "mycol",
+        "kind": 5,
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "peekOfCode": "mycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")\n        else:",
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
         "label": "get_table_of_contents_page_number",
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
@@ -257,7 +301,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def calculate_offset(toc_dict_array, doc,toc_page_num):\n   #go through each page and then check for the word on that page\n   for toc_dict in toc_dict_array:\n    all_headings_status_dict={}\n    #iterate over the dictionary\n    for heading,page_num in toc_dict.items():\n        #print(page_num, heading)\n        all_headings_status_dict[heading]={\"toc_page_num\":page_num,\"pdf_page_num\":[],\"offset\":0}\n        regex_for_current_heading=r''+heading.strip()+'\\s*(?![\\w\\d])'\n       # print(f\"regex is :{regex_for_current_heading}\")",
+        "peekOfCode": "def calculate_offset(toc_dict_array, doc,toc_page_num_array):\n   #go through each page and then check for the word on that page\n   for toc_dict in toc_dict_array:\n    all_headings_status_dict={}\n    #iterate over the dictionary\n    for heading,page_num in toc_dict.items():\n        #print(page_num, heading)\n        all_headings_status_dict[heading]={\"toc_page_num\":page_num,\"pdf_page_num\":[],\"offset\":0}\n        regex_for_current_heading=r''+heading.strip()+'\\s*(?![\\w\\d])'\n       # print(f\"regex is :{regex_for_current_heading}\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -347,7 +391,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)\n        print(\"write finished\")",
+        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -356,7 +400,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def download_pdf(url):\n    save_folder = \"../PDFExtraction/pdfs\"\n    response = requests.get(url)\n    if not os.path.exists(save_folder):\n        os.makedirs(save_folder)\n    file_name = url.split('/')[-1]\n    save_path = os.path.join(save_folder, file_name)\n    with open(save_path, 'wb') as f:\n        f.write(response.content)\n    print(f\"PDF downloaded and saved to {save_path}\")",
+        "peekOfCode": "def download_pdf(url):\n    save_folder = \"../PDFExtraction/downloaded_pdfs\"\n    response = requests.get(url)\n    if not os.path.exists(save_folder):\n        os.makedirs(save_folder)\n    file_name = url.split('/')[-1]\n    save_path = os.path.join(save_folder, file_name)\n    with open(save_path, 'wb') as f:\n        f.write(response.content)\n    print(f\"PDF downloaded and saved to {save_path}\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },
@@ -374,7 +418,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\n#Single PDFs testing\n# doc=fitz.open(os.path.join(directory,all_pdfs[0]))\n# doc=fitz.open(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n# print(\"DOCCC\\n\")\n# print(doc)\n# doc= fitz.open(\"../PDFExtraction/pdfs/AnnualReport1.pdf\")\n#doc= fitz.open(\"../PDFExtraction/pdfs/abbott_2023_annual_report.pdf\")",
+        "peekOfCode": "def extract_pdf_from_url(url):\n    pdf_saved_path = download_pdf(url)\n    extract_data_from_pdf(pdf_saved_path)\nextract_pdf_from_url(\"https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf\")\n'''\n######################################################################################################################################################################\n                                                                                    ACTUAL IMPLEMENTATION\n######################################################################################################################################################################\n'''\n# directory=\"../PDFExtraction/pdfs\"",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },

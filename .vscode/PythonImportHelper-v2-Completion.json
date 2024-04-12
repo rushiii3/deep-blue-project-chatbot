@@ -391,7 +391,7 @@
         "kind": 2,
         "importPath": "PDFExtraction.extract_pdf",
         "description": "PDFExtraction.extract_pdf",
-        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    with open(\"./file_output/output.json\", \"w\") as json_file:\n        json.dump(output, json_file, indent=4)",
+        "peekOfCode": "def write_output_to_a_file(output):\n    '''\n    f= open(\"./file_output/toc_heading_5.txt\",\"w\")\n    f.write(str(output))\n    f.close()\n    print(\"write finished\")\n    '''\n    print(output)\n    save_path = os.getcwd()+\"/PDFExtraction/file_output/output.json\"\n    print(os.getcwd()+\"/PDFExtraction/file_output/output.json\")",
         "detail": "PDFExtraction.extract_pdf",
         "documentation": {}
     },

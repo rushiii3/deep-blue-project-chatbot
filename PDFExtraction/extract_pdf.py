@@ -1204,7 +1204,9 @@ def write_output_to_a_file(output):
     print("write finished")
     '''
     print(output)
-    with open("./file_output/output.json", "w") as json_file:
+    save_path = os.getcwd()+"/PDFExtraction/file_output/output.json"
+    print(os.getcwd()+"/PDFExtraction/file_output/output.json")
+    with open(save_path, "w") as json_file:
         json.dump(output, json_file, indent=4)
         print("write finished")
 
@@ -1232,7 +1234,7 @@ def extract_data_from_pdf(pdf_path):
     if(dict_for_current_pdf !=None):
         print("DICTIONARY FOR CURRENT PDF IS\n")
         pprint(dict_for_current_pdf)
-
+        
         #get the pdf page number along with the Table of Contents Page number
         headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
 

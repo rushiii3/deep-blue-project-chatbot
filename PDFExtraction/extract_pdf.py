@@ -1229,11 +1229,11 @@ def extract_data_from_pdf(pdf_path):
     doc=fitz.open(pdf_path)
     toc_page_num_array=get_table_of_contents_page_number(doc)
     print("page num")
-    print(toc_page_num_array)
+    # print(toc_page_num_array)
     dict_for_current_pdf=get_toc_dict_for_pdf(toc_page_num_array,doc)
     if(dict_for_current_pdf !=None):
         print("DICTIONARY FOR CURRENT PDF IS\n")
-        pprint(dict_for_current_pdf)
+        # pprint(dict_for_current_pdf)
         
         #get the pdf page number along with the Table of Contents Page number
         headings_status_dict=calculate_offset(dict_for_current_pdf,doc,toc_page_num_array)
@@ -1241,14 +1241,18 @@ def extract_data_from_pdf(pdf_path):
         #go to the pages with the headings and extract subheadings
         extracted_text=extract_subheadings_and_their_text(doc,headings_status_dict)
         write_output_to_a_file(extracted_text)
+        return extracted_text
     else:
         print("no table of contents present for the pdf")
 
 # 24.API call 
 def extract_pdf_from_url(url):
     pdf_saved_path = download_pdf(url)
-    extract_data_from_pdf(pdf_saved_path)
-extract_pdf_from_url("https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf")
+    extracted_text = extract_data_from_pdf(pdf_saved_path)
+    print(extracted_text)
+    return extracted_text
+    print("Done extracedddd")
+# extract_pdf_from_url("https://res.cloudinary.com/dmuhioahv/image/upload/v1711701865/v646pefwybqsva6ti7cl.pdf")
 
 '''
 ######################################################################################################################################################################

@@ -150,7 +150,7 @@ class SubjectiveTest:
                         temp += sub[0]
                         temp += " "
                     temp = temp.strip()
-                    temp = temp.upper()
+                    temp = temp.lower()
                     if temp not in question_answer_dict:
                         question_answer_dict[temp] = sentence
                     else:

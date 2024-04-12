@@ -11,7 +11,7 @@ sys.path.append(parent_directory+'/')
 
 
 print(current_directory)
-from utils.nltk_utlis import tokenize
+from utils.nltk_utlis import tokenize, bag_of_words
 from PDFExtraction.model import NeuralNet
 def get_response(msg) :
     sentence = tokenize(msg) 
@@ -27,7 +27,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 with open('../PDFExtraction/intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
-FILE = "data.pth"
+FILE = "../PDFExtraction/data.pth"
 data = torch.load(FILE)
 
 

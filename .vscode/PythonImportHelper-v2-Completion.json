@@ -197,6 +197,14 @@
         "documentation": {}
     },
     {
+        "label": "bag_of_words",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "isExtraImport": true,
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
         "label": "NeuralNet",
         "importPath": "PDFExtraction.model",
         "description": "PDFExtraction.model",
@@ -562,7 +570,7 @@
         "kind": 6,
         "importPath": "PDFExtraction.model",
         "description": "PDFExtraction.model",
-        "peekOfCode": "class NeuralNet(nn.Module):\n    def __init__(self,input_size,hidden_size,num_classes):\n        super(NeuralNet,self).__init__()\n        self.l1 = nn.Linear(input_size,hidden_size)\n        self.l2 = nn.Linear(hidden_size,hidden_size)\n        self.l3 = nn.Linear(hidden_size,num_classes)\n        self.relu = nn.ReLU()\n    def forward(self, x):\n        print(\"iin forward\")\n        out = self.l1(x)",
+        "peekOfCode": "class NeuralNet(nn.Module):\n    def __init__(self,input_size,hidden_size,num_classes):\n        super(NeuralNet,self).__init__()\n        self.l1 = nn.Linear(input_size,hidden_size)\n        self.l2 = nn.Linear(hidden_size,hidden_size)\n        self.l3 = nn.Linear(hidden_size,num_classes)\n        self.relu = nn.ReLU()\n    def forward(self, x):\n        out = self.l1(x)\n        out = self.relu(out)",
         "detail": "PDFExtraction.model",
         "documentation": {}
     },
@@ -823,7 +831,7 @@
         "kind": 2,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "def get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"data.pth\"\ndata = torch.load(FILE)",
+        "peekOfCode": "def get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -841,7 +849,7 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence",
+        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize, bag_of_words\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -850,7 +858,7 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize, bag_of_words\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -859,7 +867,7 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']",
+        "peekOfCode": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -868,7 +876,7 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "FILE = \"data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)",
+        "peekOfCode": "FILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)",
         "detail": "main.chat",
         "documentation": {}
     },

@@ -1,5 +1,13 @@
 [
     {
+        "label": "ObjectId",
+        "importPath": "bson",
+        "description": "bson",
+        "isExtraImport": true,
+        "detail": "bson",
+        "documentation": {}
+    },
+    {
         "label": "pymongo",
         "kind": 6,
         "isExtraImport": true,
@@ -154,11 +162,20 @@
         "documentation": {}
     },
     {
+        "label": "insert_extract_db",
+        "kind": 2,
+        "importPath": "Database_Module.main",
+        "description": "Database_Module.main",
+        "peekOfCode": "def insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")\n        else:\n            # Update the document",
+        "detail": "Database_Module.main",
+        "documentation": {}
+    },
+    {
         "label": "myclient",
         "kind": 5,
         "importPath": "Database_Module.main",
         "description": "Database_Module.main",
-        "peekOfCode": "myclient = pymongo.MongoClient('mongodb+srv://hrushiop:oq16yL7AoXMn1c3x@cluster0.h4boskd.mongodb.net/')\nmydb = myclient['test']\nmycol = mydb[\"extracted_data\"]\nmydict = { \"name\": \"John\", \"address\": \"Highway 37\" }\nx = mycol.insert_one(mydict)\nprint(x)",
+        "peekOfCode": "myclient = pymongo.MongoClient('mongodb+srv://hrushiop:oq16yL7AoXMn1c3x@cluster0.h4boskd.mongodb.net/')\nmydb = myclient['test']\nmycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:",
         "detail": "Database_Module.main",
         "documentation": {}
     },
@@ -167,7 +184,7 @@
         "kind": 5,
         "importPath": "Database_Module.main",
         "description": "Database_Module.main",
-        "peekOfCode": "mydb = myclient['test']\nmycol = mydb[\"extracted_data\"]\nmydict = { \"name\": \"John\", \"address\": \"Highway 37\" }\nx = mycol.insert_one(mydict)\nprint(x)",
+        "peekOfCode": "mydb = myclient['test']\nmycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")",
         "detail": "Database_Module.main",
         "documentation": {}
     },
@@ -176,25 +193,7 @@
         "kind": 5,
         "importPath": "Database_Module.main",
         "description": "Database_Module.main",
-        "peekOfCode": "mycol = mydb[\"extracted_data\"]\nmydict = { \"name\": \"John\", \"address\": \"Highway 37\" }\nx = mycol.insert_one(mydict)\nprint(x)",
-        "detail": "Database_Module.main",
-        "documentation": {}
-    },
-    {
-        "label": "mydict",
-        "kind": 5,
-        "importPath": "Database_Module.main",
-        "description": "Database_Module.main",
-        "peekOfCode": "mydict = { \"name\": \"John\", \"address\": \"Highway 37\" }\nx = mycol.insert_one(mydict)\nprint(x)",
-        "detail": "Database_Module.main",
-        "documentation": {}
-    },
-    {
-        "label": "x",
-        "kind": 5,
-        "importPath": "Database_Module.main",
-        "description": "Database_Module.main",
-        "peekOfCode": "x = mycol.insert_one(mydict)\nprint(x)",
+        "peekOfCode": "mycol = mydb[\"files\"]\ndef insert_extract_db(extract,id):\n    myquery = { \"_id\": ObjectId(id) }\n    newvalues = { \"$set\": { \"extracted_data\": extract } }\n    try:\n        # Attempt to find the document\n        y = mycol.find_one(myquery)\n        if y is None:\n            print(\"Document not found.\")\n        else:",
         "detail": "Database_Module.main",
         "documentation": {}
     },

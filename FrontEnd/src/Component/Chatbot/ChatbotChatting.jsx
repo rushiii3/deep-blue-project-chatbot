@@ -56,7 +56,7 @@ const ChatbotChatting = () => {
     // Scroll to bottom when Chat updates
     scrollToBottom();
   }, [Chat]);
-  const buttonLabels = ["Item 1", "Item 2", "Item 3"];
+  const buttonLabels = ["Describe the key metrics related to april.", "Analyze the trends in july.", "Describe the key metrics related to collaboration with siemens."];
 
   return (
     <div class="fixed bottom-[calc(4rem+1.5rem)] right-0 mr-4  bg-white p-6 rounded-lg border border-[#e5e7eb] w-md min-w-md max-w-md  h-[calc(100%-10rem)] dark:bg-black ">

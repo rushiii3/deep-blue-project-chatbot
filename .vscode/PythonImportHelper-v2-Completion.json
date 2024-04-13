@@ -79,6 +79,83 @@
         "documentation": {}
     },
     {
+        "label": "SubjectiveTest",
+        "importPath": "intents_generator",
+        "description": "intents_generator",
+        "isExtraImport": true,
+        "detail": "intents_generator",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "nltk",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "nltk",
+        "description": "nltk",
+        "detail": "nltk",
+        "documentation": {}
+    },
+    {
+        "label": "torch",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch",
+        "description": "torch",
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "torch.nn",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.nn",
+        "description": "torch.nn",
+        "detail": "torch.nn",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "Dataset",
+        "importPath": "torch.utils.data",
+        "description": "torch.utils.data",
+        "isExtraImport": true,
+        "detail": "torch.utils.data",
+        "documentation": {}
+    },
+    {
+        "label": "DataLoader",
+        "importPath": "torch.utils.data",
+        "description": "torch.utils.data",
+        "isExtraImport": true,
+        "detail": "torch.utils.data",
+        "documentation": {}
+    },
+    {
+        "label": "NeuralNet",
+        "importPath": "model",
+        "description": "model",
+        "isExtraImport": true,
+        "detail": "model",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
@@ -96,12 +173,43 @@
         "documentation": {}
     },
     {
-        "label": "nltk",
-        "kind": 6,
+        "label": "stem",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
         "isExtraImport": true,
-        "importPath": "nltk",
-        "description": "nltk",
-        "detail": "nltk",
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "bag_of_words",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "isExtraImport": true,
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "tokenize",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "isExtraImport": true,
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "bag_of_words",
+        "importPath": "utils.nltk_utlis",
+        "description": "utils.nltk_utlis",
+        "isExtraImport": true,
+        "detail": "utils.nltk_utlis",
+        "documentation": {}
+    },
+    {
+        "label": "NeuralNet",
+        "importPath": "PDFExtraction.model",
+        "description": "PDFExtraction.model",
+        "isExtraImport": true,
+        "detail": "PDFExtraction.model",
         "documentation": {}
     },
     {
@@ -110,15 +218,6 @@
         "description": "nltk.stem.porter",
         "isExtraImport": true,
         "detail": "nltk.stem.porter",
-        "documentation": {}
-    },
-    {
-        "label": "numpy",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "numpy",
-        "description": "numpy",
-        "detail": "numpy",
         "documentation": {}
     },
     {
@@ -440,11 +539,308 @@
         "documentation": {}
     },
     {
+        "label": "intents",
+        "kind": 5,
+        "importPath": "PDFExtraction.generate_intents",
+        "description": "PDFExtraction.generate_intents",
+        "peekOfCode": "intents = {\"intents\": []}\n# Open the JSON file\nwith open('./file_output/output.json', 'r') as file:\n    # Read the contents of the file\n    json_data = json.load(file)\n# Iterate over each key in the JSON data\nfor key, value in json_data.items():\n    print(f\"Key: {key}\")\n    # Check if the value is a list\n    if isinstance(value, list):",
+        "detail": "PDFExtraction.generate_intents",
+        "documentation": {}
+    },
+    {
+        "label": "SubjectiveTest",
+        "kind": 6,
+        "importPath": "PDFExtraction.intents_generator",
+        "description": "PDFExtraction.intents_generator",
+        "peekOfCode": "class SubjectiveTest:\n    def __init__(self, data):\n        self.question_pattern = [\n            \"Explain the significance of \",\n    \"Discuss the financial implications of \",\n    \"Describe the key metrics related to \",\n    \"Analyze the trends in \",\n    \"Evaluate the financial performance of \",\n    \"Explain the impact of \",\n    \"Illustrate the concept of \",",
+        "detail": "PDFExtraction.intents_generator",
+        "documentation": {}
+    },
+    {
+        "label": "financial_data",
+        "kind": 5,
+        "importPath": "PDFExtraction.intents_generator",
+        "description": "PDFExtraction.intents_generator",
+        "peekOfCode": "financial_data = ''' We have invested significant resources into research and development of our DFI system and Exensio platform and if we fail to successfully carry out these initiatives on the expected timeline or at all, our business, financial condition, or results of operations could be adversely impacted. As part of the evolution of our business, we have made substantial investments in research and development efforts to develop our DFI system and Exensio cloud-based platform. New competitors, technological advances in the semiconductor industry or by competitorsor other competitive factors may require us to further invest significantly greater resources than we anticipate. If we are required to invest significantly greater resources than anticipated without a corresponding increase in revenue, our operating results could decline. There can be no guarantee that the technologies or products that we invest in will result in products that create additional revenue. We may not recoup our research and development investments, which could cause our results to suffer. If our DFI system and Exensio platform do not anticipate technological changes in our industry or fail to meet market demand, we may not capture the market share we anticipate, lose our competitive position, our products may become obsolete, and our business, financial condition or results of operations could be adversely affected. Additionally, our periodic research and development expenses may be independent of our level of revenue, which could negatively impact our financial results. Our sales cycle is lengthy and customers may delay entering into contracts or decide not to adopt our products or solutions after we have performed services or supported their evaluation of our technology, which could result in delays in recognizing revenue and could negatively impact our results of operations in a quarter or result in lower revenue than we expected if a contract is not consummated. On-going negotiations and evaluation projects for new products, with new customers or in new markets may not result in significant revenues for us if we are unable to close new engagements on terms favorable to us, in a timely manner, or at all. Unexpected delays in our sales cycle could cause our revenues to fall short of expectations. Further, the timing and length of negotiations required to enter into agreements with our customers and the enforcement of our complex contractual provisions is difficult to predict. If we do not successfully negotiate certain key complex contractual provisions, if there are disputes regarding such provisions, or if they are not enforceable as we intended, our revenues and results of operations would suffer. Further, our customers sometimes delay starting negotiations until they begin developing a new process, have a need for a new product, or experience specific yield issues. This means that, on occasion we have, and may continue to provide technology and services under preliminary documentation before executing the final contract. In these cases, we would not recognize revenue and may defer associated costs until execution of a final contract, which, if significant, could negatively impact our results of operations in the periods before we execute a final contract. Further, if we were to incur significant costs and then fail to enter into a final contract, we would have to write-off such deferred costs in the period in which the negotiations ended, which would increase our costs and expenses and could result in significant operating losses. Our fixed-fee services or product or system installations/configurations may take longer than budgeted, which could slow our revenue recognition and may also result in a lost contract or a claim of breach by our customers, which would negatively affect our operating results. Our fixed-fee services, including for characterization, require a team of engineers to collaborate with our customers to address complex issues by using our software and other technologies, and the installation and configuration of our software into our customers\\u2019 fabrication and test/assembly facilities requires experienced engineers working with our customers on active foundry and test/assembly equipment. We must accurately estimate the amount of resources needed to complete these types of services to determine when the engineers will be able to commence their next engagement. In addition, our accounting for contracts with such services, which generate fixed fees, sometimes requires adjustments to profit and loss based on revised estimates during the performance of the contract. These adjustments may have a material effect on our results of operations in the period in which they are made. The estimates giving rise to these risks, which are inherent in fixed-price contracts, include the forecasting of costs and schedules, and contract revenues related to contract 16 performance. If we fail to meet a customer\\u2019s expectations in either case, the customer could claim that we breached our obligations, which could result in lost revenue and increased expenses. Our ability to sell our products, systems, and solutions depends in part on the quality of our support and services offerings, and the failure to offer high-quality support and services could negatively affect our sales and results of operations. Once our products are integrated within our customers\\u2019 hardware and software systems, our customers may depend on our support organization to resolve any issues relating to our products. Further, in connection with delivering our SaaS, which requires us to maintain adequate server hardware and internet infrastructure, including system redundancies, we are required to meet contractual uptime obligations. A high level of system and support is critical for the successful marketing and sale of our products. If we do not effectively provide subscription access to our SaaS customers, assist our customers in deploying our products, succeed in helping our customers quickly resolve post- deployment issues, and provide effective on-going support and the privacy and data security capabilities required by our customers, we may face contractual penalties or customers may not renew subscriptions or services in the future, which would negatively impact our results of operations. In addition, due to our international operations, our system and support organization faces challenges associated with delivering support, hours that support is available, training, and documentation where the user\\u2019s native language may not be English. If we fail to maintain high-quality support and services or fail to adequately address our customers\\u2019 support needs, our customers may choose our competitors\\u2019 products instead of ours in the future, which would negatively affect our revenues and results of operations. Defects in our proprietary technologies, hardware and software tools, and failure to effectively remedy any such defects could decrease our revenue and our competitive market share. If the software, hardware, or proprietary technologies we provide to customers contain defects that negatively impact customers\\u2019 ability to use our systems or software, increase our customers\\u2019 cost of goods sold or time-to-market, or damage our customers\\u2019 property, such defects could significantly decrease the market acceptance of our products and services or could result in warranty or other claims. We must adequately train our new personnel, especially our customer service and technical support personnel, to effectively and accurately, respond to and support our customers. If we fail to do this, it could lead to dissatisfaction among our customers, which could slow our growth. Further, the cost of support resources required to remedy any defects in our technologies, hardware, or software tools could exceed our expectations. Any actual or perceived defects with our software, hardware, or proprietary technologies may also hinder our ability to attract or retain industry partners or customers, leading to a decrease in our revenue. These defects are frequently found during the period following introduction of new software, hardware, or proprietary technologies or enhancements to existing software, hardware, or proprietary technologies, which means that we may not discover the errors or defects until after customer implementation. If our software, hardware, or proprietary technologies contain errors or defects, it could require us to expend significant resources to remedy these problems or defend/ indemnify claims, which could reduce margins and result in the diversion of technical and other resources from our other customer implementations and development efforts. Objectionable disclosure of our customers\\u2019 confidential information or our failure to comply with our customers\\u2019 security rules, including for those related to SaaS access or our on-site access could result in costly litigation, cause us to lose existing and potential customers, or negatively impact on-going business with existing customers. Our customers consider their product yield and test information and other confidential information, which we collect in the ordinary course of our engagement with the customer or through our software tools, including data and personal data about our customers\\u2019 employees necessary to administer the licenses, to be extremely competitively sensitive or subject to strict protection frameworks. Many of our customers have strict security rules for on-site access to, hosting of, or transfer of their confidential information. As a result of increased regulatory and customer scrutiny of all data processing activities, as well as increasing and evolving regulation of such practices, we have security obligations on how we collect, transfer and use data (including personal data), which could require us to expend money and resources to comply with those requirements, and if compromised, could have a material adverse effect on our business, financial condition and results of operations, including the potential for regulatory investigations, enforcement actions, lawsuits and a loss of business and a degradation of our reputation. If we suffer an unauthorized intrusion or we inadvertently disclose or are required to disclose this information, or disclose this information in a manner that was objectionable to our customers, 17 regulators, consumer protection groups, or privacy groups, or if we fail to adequately comply with customers\\u2019 security protocols for accessing or hosting confidential information, our reputation could be materially adversely affected, we could lose existing and potential customers or could be subject to costly penalties or litigation, or our on-going business could be negatively impacted and insurance to cover such situations may not fully cover our exposure. If we fail to implement industry standard protections and processing procedures, the growing awareness of our customers and potential customers regarding privacy and data security requirements and/or adverse media coverage or regulatory scrutiny could limit the use and adoption of our services. In addition, to avoid potential disclosure of confidential information to competitors, some of our customers may, in the future, ask us not to work with key products or processes, which could limit our revenue opportunities. We generate a significant portion of our revenues from a limited number of customers, and a large percentage of our revenues from two customers, so defaults or decreased business with, or the loss of, any one of these customers, or pricing pressure, or customer consolidation could significantly reduce our revenues or margins and negatively impact results of operations. Historically, we have had a small number of large customers that contribute significant revenues. In the year ended December 31, 2022, two customers accounted for 41% of our total revenues. We have in the past and could in the future lose a customer due to its decision not to develop or produce its own future process node or not to engage us on future process nodes. We could also lose customers as a result of industry factors, including but not limited to reduced manufacturing volume or consolidation. Consolidation among our customers could also lead to increased customer bargaining power, or reduced customer spending on software and services. Further, new business may be delayed if a key customer uses its leverage to push for terms that are worse for us and we delay entering into the contract to negotiate for better terms, in which case revenue in any particular quarter or year may fail to meet expectations. Also, the loss of any of these customers or the failure to secure new contracts with these customers could further increase our reliance on our remaining customers. Further, if any of our key customers default, declare bankruptcy or otherwise delay or fail to pay amounts owed, or we otherwise have a dispute with any of these customers, our results of operations would be negatively affected in the short term and possibly the long term. For example, in 2022, 2021 and 2020 we incurred expenses in the amount of $1.9 million, $2.0 million and $1.1 million, respectively, related to the arbitration with SMIC New Technology Research & Development (Shanghai) Corporation due to SMIC\\u2019s failure to pay fees due to us under a series of contracts. In early 2023, we will incur substantial additional expenses related to an arbitration hearing to resolve this matter. The loss of revenue from any of our key customers would cause significant fluctuations in results of operations because our expenses are fixed in the short term and it takes us a long time to replace customers or reassign resources. If we do not continuously meet our development milestones of key research and development projects or successfully commercialize our Design-for-Inspection system, our future market opportunity and revenues will suffer, and our costs may not be recouped. We have invested significantly in the design and development of our eProbe tool and related IP. Key customers failing to purchase, renew, or expand the number or use of such systems on our expected timeline or at all will cause our results to miss expectations. Also, if the results of our DFI system, including new applications, are not as we expect, we may not be able to successfully commercialize this system or such applications on schedule, or at all, and we may miss the market opportunity and not recoup our investment. Further, our eProbe tool could cause unexpected damage to wafers or delay processing wafers, which we could be liable for, or which could make customers unwilling to use it. If we are not able to create significant interest and show reliable and useful results without significant damage to wafers, our investment may not be recouped and our future results may suffer. We are required to comply with governmental export and import requirements that could subject us to liability and restrict our ability to sell our products and services, which could impair our ability to compete in international markets. We are required to comply with export controls and economic sanctions laws and regulations that restrict selling, shipping or transmitting our products and services and transferring our technology outside the United States. These 18 requirements also restrict domestic release of software and technology to foreign nationals. In addition, we are subject to customs and other import requirements that regulate imports that are important for our business. If we fail to comply with the U.S. Export Administration Regulations or other U.S. or non-U.S. export or economic sanctions laws and regulations (collectively, \\u201cExport Regulations\\u201d), we could be subject to substantial civil and criminal penalties, including fines for the Company and the possible loss of the ability to engage in exporting and other international transactions. Due to the nature of our business and technology, Export Regulations may also subject us to governmental inquiries regarding transactions between us and certain foreign entities. Export Regulations are fluid, complex, and uncertain, and there are ongoing efforts throughout the industry in coordination with regulators to revise, clarify, and interpret Export Regulations. The U.S. Congress and regulators continue to consider significant changes in laws and regulations. We cannot predict the impact that additional legal changes may have on our business in the future. For example, in October 2022 the U.S. Bureau of Industry and Security (\\u201cBIS\\u201d) promulgated broad, novel Export Regulations relating to China that temporarily caused us to pause some deliveries while we interpreted the application of the new regulations on our business, given current and evolving operations.  Also, BIS has placed certain entities on its entity list (the \\u201cEntity List\\u201d), which restricts supply of items to or in connection with the named entities. Further, in some circumstances Export Regulations require a license to export an item if the recipient will use the item to design or produce an item for a Huawei-affiliated company or certain other organizations on the Entity List. These regulations can also require licenses for exports that involve Chinese military or intelligence-related end users or end uses. Future changes in Export Regulations, including changes in the enforcement and scope of such regulations, may create delays in the introduction of our products or services in international markets or could prevent our customers with international operations from deploying our products or services globally. In some cases, such changes could prevent the export of our products or services to certain countries, governments, entities or individuals altogether. Any such delays or restrictions could adversely affect our business, financial condition and results of operations. For further discussion, see Item 7. \\u201cManagement\\u2019s Discussion and Analysis of Financial Condition and Results of Operations.\\u201d Decreases in wafer volumes at our customers\\u2019 manufacturing sites or the volume of ICs that some of our customers are able to sell to their customers would cause our Integrated Yield Ramp revenue to suffer. Our Integrated Yield Ramp revenue includes amounts largely determined by variable wafer volumes at manufacturing sites covered by our contracts and, in some cases, determined by the volume of an IC product that our customer is able to sell to its customers. Both of these factors are outside of our control. We have seen a significant reduction in our Integrated Yield Ramp revenue in recent years and expect this trend to continue. Further, some of our manufacturing customers\\u2019 business is largely dependent on customers that use our manufacturing customer as a second or third source. If those customers consolidate and/or otherwise move the orders to manufacturing facilities not covered by our contracts, or suspend their manufacturing at covered facilities for any reason, including consolidation, our Integrated Yield Ramp revenue will continue to decrease, which could negatively affect our financial results. Further, reduced demand for semiconductor products or protectionist policies like those stemming from the complex relationships among China, Hong Kong, Taiwan, and the United States has from time to time decreased and may continue to decrease the volume of wafers and, in some cases, products our customers are able to make or sell, which would also decrease our Integrated Yield Ramp revenue. Also, our customers may unilaterally decide to implement changes to their manufacturing processes during the period that volume is covered by royalty contracts, which could negatively affect yield results and, thus, our Integrated Yield Ramp revenue. Since we currently work on a small number of large projects at specified manufacturing sites and, in some cases, on specific IC products, our results of operations have been and may continue to be adversely affected by negative changes at those sites or in those products, including slowdowns in manufacturing due to external factors, such as U.S. trade restrictions, rising inflation and global interest rates, the impact of the on-going COVID-19 pandemic, or continued or worsening supply chain disruptions. Also, if wafer orders from sites covered by our contracts are not secured by our customers, if an end product does not achieve commercial viability, if a process line or, in some cases, a specific product, does not achieve significant increases in yield or sustain significant volume manufacturing during the time we receive royalties, revenues associated with such volumes or products would be negatively impacted. This could significantly reduce our Integrated Yield Ramp revenue and our results of operations could fail to meet expectations. In addition, if we 19 work with two directly competitive manufacturing facilities or products, volume in one may offset volume, and thus any of our related revenue, in the other facility or product. Our success depends upon our ability to effectively plan and manage our resources and restructure our business through rapidly fluctuating economic and market conditions, which actions may have an adverse effect on our financial and operating results. Our ability to successfully offer our products and services in a rapidly evolving market requires an effective planning, forecasting, and management process to enable us to effectively scale and adjust our business and business models in response to fluctuating market opportunities and conditions, which has and could continue to require us to increase headcount, acquire new companies or engage in restructurings from time to time. For example, while we have increased investment in our business by increasing headcount, acquiring companies, and increasing our investment in R&D, sales and marketing, and other parts of our business from time to time, at other times we have undertaken restructuring  initiatives to reduce expenses and align our operations with evolving business needs. Some of our expenses related to such efforts are fixed costs that cannot be rapidly or easily adjusted in response to fluctuations in our business or headcount. Rapid changes in the size, alignment or organization of our workforce, including sales account coverage, could adversely affect our ability to develop and deliver products and services as planned or impair our ability to realize our current or future business and financial objectives. Our ability to achieve the anticipated cost savings and other benefits from restructuring initiatives within the expected time frame is subject to many estimates and assumptions, which are subject to significant economic, competitive and other uncertainties, some of which are beyond our control. If these estimates and assumptions are incorrect, if we are unsuccessful at implementing changes, or if other unforeseen events occur, our business and results of operations could be adversely affected Our business may be impacted by geopolitical events and uncertainties, war, terrorism, or other business interruptions beyond our control. Geopolitical uncertainties, including relations between the United States and each of China and Russia, war, terrorism, or other business interruptions could cause damage to, disrupt, or cancel sales of our products and services on a global or regional basis, which could have a material adverse effect on our business or vendors with which we do business. Due to the significance of our China market for our profit and growth, we are exposed to risks in China, including the risks mentioned elsewhere and the following: the effects of current U.S.-China relations, including rounds of tariff increases and retaliations and increasing restrictive regulations, potential boycotts and increasing anti-Americanism; escalating U.S.- China tension and increasing political sensitivities in China; and unexpected governmental regulations and restrictions in China as a result of renewed or increased efforts to contain the COVID-19 pandemic, which could negatively impact our local operations. Such events could also make it difficult or impossible for us to deliver products and services to our customers. In addition, territorial invasions can lead to cybersecurity attacks on technology companies, such as ours, located far outside of the conflict zone. In the event of prolonged business interruptions or negative broad economic and security conditions due to geopolitical events, we could incur significant losses, require substantial recovery time, and experience significant expenditures in order to resume our business operations. In addition, our insurance policies typically contain a war exclusion of some description and we do not know how our insurers are likely to respond in the event of a loss alleged to have been caused by geopolitical uncertainties. Global economic conditions or semiconductor market conditions could materially adversely impact demand for our products and services, decrease our sales, or delay our sales cycle. Our customers are global semiconductor companies, which means that our operations and performance depend significantly on worldwide economic conditions as well as semiconductor market specific changes. Uncertainty about global economic conditions including war, terrorism, geopolitical uncertainties and other business interruptions could result in damage to, disruption, postponement or cancellation of sales of our products or services on a global or regional basis. Furthermore, tighter credit, higher interest rates, inflationary concerns, unemployment, negative financial news and/or declines in income or asset values and other macroeconomic factors could have a material adverse effect on demand for our products and services and, accordingly, on our business, results of operations or financial condition and/or vendors with which we do business. For example, the timing of the build-out of the semiconductor market in China depends significantly on governmental funding on both local and national levels and a delay in this funding could negatively affect 20 our revenues. Further, any economic and political uncertainty caused by the United States tariffs imposed on goods from China or enhanced U.S. export regulations relating to China, among other potential countries, and any corresponding tariffs from China or such other countries in response, may negatively impact demand and/or increase the cost for our products. Similarly, the on-going COVID-19 pandemic in China or in other nations has and may continue to cause a slowdown in the global economy and demand for our products and services. Further, the semiconductor industry historically has been volatile with up cycles and down cycles, due to sudden changes in customers\\u2019 manufacturing capacity requirements and spending, which depend in part on capacity utilization, demand for customers\\u2019 IC products by consumers, inventory levels relative to demand, and access to affordable capital. As a result of the various factors that affect this volatility, the timing and length of any cycles can be difficult to predict and could be longer than anticipated. Any of these events could negatively affect our revenues and make it challenging or impossible for us to deliver products and services to our customers forecast our operating results, make business decisions, and identify the risks that may affect our business, financial condition and results of operations. Customers with liquidity issues may also lead to additional bad debt expense. Supply-chain disruptions could impact our ability to build additional hardware tools or meet customer deadlines. Disruptions to our supply chain may significantly increase our component costs and could impact our ability to build additional hardware tools, which would decrease our sales, earnings, and liquidity or otherwise adversely affect our business and result in increased costs. Such a disruption could occur as a result of any number of events, including, but not limited to: rising inflation and global interest rates increasing component costs, a closure or slowdown at our suppliers\\u2019 plants or shipping delays including, for example, those made to combat the spread of COVID-19, market shortages for critical components, increases in prices, the imposition of regulations, quotas, embargoes or tariffs on components or our products, labor stoppages or shortages, supply chain disruptions, third-party interference, cyberattacks, severe weather conditions including the adverse effects of climate change-related events, geopolitical developments, war or terrorism, and disruptions in utilities and other services. In addition, the development, licensing, or acquisition of new products in the future may increase the complexity of supply chain management. Failure to effectively manage our supply of components and products could adversely affect our business.'''\n# test_generator = SubjectiveTest(financial_data)\n# questions, answers, keywords = test_generator.generate_test()\n# for q, a, k in zip(questions, answers,keywords):\n#     print(\"Question:\", q)\n#     print(\"Answer:\", a)\n#     print(\"Keywords:\",k)\n#     print()",
+        "detail": "PDFExtraction.intents_generator",
+        "documentation": {}
+    },
+    {
+        "label": "NeuralNet",
+        "kind": 6,
+        "importPath": "PDFExtraction.model",
+        "description": "PDFExtraction.model",
+        "peekOfCode": "class NeuralNet(nn.Module):\n    def __init__(self,input_size,hidden_size,num_classes):\n        super(NeuralNet,self).__init__()\n        self.l1 = nn.Linear(input_size,hidden_size)\n        self.l2 = nn.Linear(hidden_size,hidden_size)\n        self.l3 = nn.Linear(hidden_size,num_classes)\n        self.relu = nn.ReLU()\n    def forward(self, x):\n        out = self.l1(x)\n        out = self.relu(out)",
+        "detail": "PDFExtraction.model",
+        "documentation": {}
+    },
+    {
+        "label": "ChatDataset",
+        "kind": 6,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "class ChatDataset(Dataset):\n    def __init__(self):\n        self.nsamples = len(x_train)\n        self.xdata = x_train\n        self.ydata = y_train\n    def __getitem__(self, index):\n        return self.xdata[index],self.ydata[index]\n    def __len__(self):\n        return self.nsamples\nx_train = np.array(x_train)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "current_directory",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom  utils.nltk_utlis import tokenize,stem,bag_of_words\nwith open(\"intents.json\",\"r\") as f:\n    intents = json.load(f)\ntags = []\npattern_all_words = []\nxy = []",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "parent_directory",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom  utils.nltk_utlis import tokenize,stem,bag_of_words\nwith open(\"intents.json\",\"r\") as f:\n    intents = json.load(f)\ntags = []\npattern_all_words = []\nxy = []\nfor intent in intents[\"intents\"]:",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "tags",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "tags = []\npattern_all_words = []\nxy = []\nfor intent in intents[\"intents\"]:\n    tag = intent[\"tag\"]\n    tags.append(tag)\n    for pattern in intent[\"patterns\"]:\n        w = tokenize(pattern)\n        pattern_all_words.extend(w)\n        xy.append((w,tag))",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "pattern_all_words",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "pattern_all_words = []\nxy = []\nfor intent in intents[\"intents\"]:\n    tag = intent[\"tag\"]\n    tags.append(tag)\n    for pattern in intent[\"patterns\"]:\n        w = tokenize(pattern)\n        pattern_all_words.extend(w)\n        xy.append((w,tag))\nignore_words = [',','.',':','!','?']",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "xy",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "xy = []\nfor intent in intents[\"intents\"]:\n    tag = intent[\"tag\"]\n    tags.append(tag)\n    for pattern in intent[\"patterns\"]:\n        w = tokenize(pattern)\n        pattern_all_words.extend(w)\n        xy.append((w,tag))\nignore_words = [',','.',':','!','?']\npattern_all_words = [stem(w) for w in pattern_all_words if w not in ignore_words]",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "ignore_words",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "ignore_words = [',','.',':','!','?']\npattern_all_words = [stem(w) for w in pattern_all_words if w not in ignore_words]\npattern_all_words = sorted(set(pattern_all_words))\ntag = sorted(set(tags))\nx_train = []\ny_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "pattern_all_words",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "pattern_all_words = [stem(w) for w in pattern_all_words if w not in ignore_words]\npattern_all_words = sorted(set(pattern_all_words))\ntag = sorted(set(tags))\nx_train = []\ny_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)\n    label = tags.index(tag)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "pattern_all_words",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "pattern_all_words = sorted(set(pattern_all_words))\ntag = sorted(set(tags))\nx_train = []\ny_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)\n    label = tags.index(tag)\n    y_train.append(label)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "tag",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "tag = sorted(set(tags))\nx_train = []\ny_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)\n    label = tags.index(tag)\n    y_train.append(label)\nclass ChatDataset(Dataset):",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "x_train",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "x_train = []\ny_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)\n    label = tags.index(tag)\n    y_train.append(label)\nclass ChatDataset(Dataset):\n    def __init__(self):",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "y_train",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "y_train = []\nfor (pattern_sentence,tag) in xy:\n    bag = bag_of_words(pattern_sentence,pattern_all_words)\n    print(bag)\n    x_train.append(bag)\n    label = tags.index(tag)\n    y_train.append(label)\nclass ChatDataset(Dataset):\n    def __init__(self):\n        self.nsamples = len(x_train)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "x_train",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "x_train = np.array(x_train)\ny_train = np.array(y_train)\ndataset = ChatDataset()\nbatch_size = 8\nnum_epoches = 1000\nlearning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "y_train",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "y_train = np.array(y_train)\ndataset = ChatDataset()\nbatch_size = 8\nnum_epoches = 1000\nlearning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "dataset",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "dataset = ChatDataset()\nbatch_size = 8\nnum_epoches = 1000\nlearning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "batch_size",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "batch_size = 8\nnum_epoches = 1000\nlearning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "num_epoches",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "num_epoches = 1000\nlearning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "learning_rate",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "learning_rate = 0.01\ninput_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "input_size",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "input_size = len(x_train[0])\nhidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "hidden_size",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "hidden_size = 8\noutput_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "output_size",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "output_size = len(tags)\ntrain_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "train_loader",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "train_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=True,num_workers=0)\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)\n        print(words)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "device",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)\n        print(words)\n        labels = labels.to(dtype=torch.long).to(device)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "model",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "model = NeuralNet(input_size,hidden_size,output_size).to(device)\nprint(model)\ncriterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)\n        print(words)\n        labels = labels.to(dtype=torch.long).to(device)\n        outputs = model(words)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "criterion",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "criterion = nn.CrossEntropyLoss()\noptimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)\n        print(words)\n        labels = labels.to(dtype=torch.long).to(device)\n        outputs = model(words)\n        loss = criterion(outputs,labels)\n        optimizer.zero_grad()",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "optimizer",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "optimizer = torch.optim.Adam(model.parameters(),lr=learning_rate)\nfor epoch in range(num_epoches):\n    for (words,labels) in train_loader:\n        words = words.to(device)\n        print(words)\n        labels = labels.to(dtype=torch.long).to(device)\n        outputs = model(words)\n        loss = criterion(outputs,labels)\n        optimizer.zero_grad()\n        loss.backward()",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "data",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "data = {\n    \"model_state\" : model.state_dict(),\n    \"input_size\" : input_size,\n    \"hidden_size\" : hidden_size,\n    \"output_size\" : output_size,\n    \"pattern_all_words\" : pattern_all_words,\n    \"tags\" : tags \n}\nFILE = \"data.pth\"\ntorch.save(data,FILE)",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
+        "label": "FILE",
+        "kind": 5,
+        "importPath": "PDFExtraction.train",
+        "description": "PDFExtraction.train",
+        "peekOfCode": "FILE = \"data.pth\"\ntorch.save(data,FILE)\nprint(f'tarning complete. File saved to{FILE}')",
+        "detail": "PDFExtraction.train",
+        "documentation": {}
+    },
+    {
         "label": "get_response",
         "kind": 2,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "def get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")\n    resp = get_response(\"hey hello how are youu\")\n    print(resp)",
+        "peekOfCode": "def get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "get_response",
+        "kind": 2,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "def get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)\n    X = X.reshape(1, X.shape[0])\n    X = torch.from_numpy(X).to(device)\n    output = model(X)\n    _, predicted = torch.max(output, dim=1)\n    tag = tags[predicted.item()]\n    probs = torch.softmax(output, dim=1)\n    prob = probs[0][predicted.item()]",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -453,7 +849,7 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nfrom utils.nltk_utlis import tokenize\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")",
+        "peekOfCode": "current_directory = os.getcwd()\nparent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize, bag_of_words\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence",
         "detail": "main.chat",
         "documentation": {}
     },
@@ -462,7 +858,106 @@
         "kind": 5,
         "importPath": "main.chat",
         "description": "main.chat",
-        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nfrom utils.nltk_utlis import tokenize\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\nif __name__ == \"__main__\":\n    print(\"Let's chat! (type 'quit' to exit)\")\n    resp = get_response(\"hey hello how are youu\")",
+        "peekOfCode": "parent_directory = os.path.dirname(current_directory)\nsys.path.append(parent_directory+'/')\nprint(current_directory)\nfrom utils.nltk_utlis import tokenize, bag_of_words\nfrom PDFExtraction.model import NeuralNet\ndef get_response(msg) :\n    sentence = tokenize(msg) \n    print(sentence)\n    return sentence\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "device",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nwith open('../PDFExtraction/intents.json', 'r') as json_data:\n    intents = json.load(json_data)\nFILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "FILE",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "FILE = \"../PDFExtraction/data.pth\"\ndata = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "data",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "data = torch.load(FILE)\ninput_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "input_size",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "input_size = data[\"input_size\"]\nhidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" ",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "hidden_size",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "hidden_size = data[\"hidden_size\"]\noutput_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "output_size",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "output_size = data[\"output_size\"]\npattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "pattern_all_words",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "pattern_all_words = data[\"pattern_all_words\"]\ntags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "tags",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "tags = data['tags']\nmodel_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)\n    X = X.reshape(1, X.shape[0])",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "model_state",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "model_state = data[\"model_state\"]\nmodel = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)\n    X = X.reshape(1, X.shape[0])\n    X = torch.from_numpy(X).to(device)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "model",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "model = NeuralNet(input_size, hidden_size, output_size).to(device)\nmodel.load_state_dict(model_state)\nmodel.eval()\nbot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)\n    X = X.reshape(1, X.shape[0])\n    X = torch.from_numpy(X).to(device)\n    output = model(X)",
+        "detail": "main.chat",
+        "documentation": {}
+    },
+    {
+        "label": "bot_name",
+        "kind": 5,
+        "importPath": "main.chat",
+        "description": "main.chat",
+        "peekOfCode": "bot_name = \"DiGiCOR Chatbot\" \ndef get_response(msg):\n    sentence = tokenize(msg)\n    X = bag_of_words(sentence, pattern_all_words)\n    X = X.reshape(1, X.shape[0])\n    X = torch.from_numpy(X).to(device)\n    output = model(X)\n    _, predicted = torch.max(output, dim=1)\n    tag = tags[predicted.item()]\n    probs = torch.softmax(output, dim=1)",
         "detail": "main.chat",
         "documentation": {}
     },

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const production = false;
+const production = true;
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");

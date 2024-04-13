@@ -14,7 +14,7 @@ const LandingPage = () => {
     <Technology />
     <Teams />
     <ChatDesign />
-    <Footer />
+    {/* <Footer /> */}
     </>
   )
 }

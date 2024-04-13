@@ -13,14 +13,14 @@ const Teams = () => {
             "job":"PDF extration"
         },
         {
-            "name":"Aryan Kadam",
+            "name":"Aryan Bagwe",
             "image":"https://res.cloudinary.com/dmuhioahv/image/upload/v1706454922/WhatsApp_Image_2024-01-28_at_3.41.23_PM_e3c0zc.jpg",
-            "job":"Website"
+            "job":"FAQ Generation"
         },
         {
             "name":"Pratik Kumbhar",
             "image":"https://res.cloudinary.com/dmuhioahv/image/upload/v1694934518/vulsoo6xmgaxpwxbjjez.jpg",
-            "job":"Website"
+            "job":"Data Intents"
         }
     ]
   return (

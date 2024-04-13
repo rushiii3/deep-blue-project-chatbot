@@ -47,10 +47,20 @@ const TableView = () => {
 
     getData();
   }, []);
-  const handleSelection = (e) => {
+  const handleSelection = async(e) => {
     console.log(e);
+    const myArray = Array.from(e); // Convert Set to array
+    const myValue = myArray[0];
+    const filteredData = FinanceData.filter(item => item._id === myValue);
+    const filteredUrls = filteredData.map(item => item.pdf.url);
+    console.log(filteredUrls[0]);
+    try {
+      const {data} = await axios.post("https://fantastic-eureka-6x6jg4r94p73475-5000.app.github.dev/api/extraction",{url:myValue,id:filteredUrls[0]})
+      console.log(data);
+    } catch (error) {
+      
+    }
     setSelectedKeys(e)
-    console.log("old",selectedKeys);
   }
   return (
     <Table

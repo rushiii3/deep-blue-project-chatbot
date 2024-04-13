@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
+
 # import sys
 # import os
 
@@ -15,7 +17,7 @@ from main.chat import get_response
 from PDFExtraction.extract_pdf import extract_pdf_from_url
 from Database_Module.main import insert_extract_db
 app = Flask(__name__)
-
+CORS(app)
 
 # Define a sample route for your API
 @app.route('/api/hello', methods=['GET'])
@@ -25,7 +27,6 @@ def hello():
 # API route for extraction
 @app.route('/api/extraction',methods=['POST'])
 def extract_pdf():
-    print("yeee")
     url = request.get_json().get("url")
     id = request.get_json().get("id")
     extract = extract_pdf_from_url(url)

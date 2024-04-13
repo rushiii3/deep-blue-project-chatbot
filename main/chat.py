@@ -22,12 +22,12 @@ def get_response(msg) :
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
+print(current_directory+"/PDFExtraction/intents.json")
 
-
-with open('../PDFExtraction/intents.json', 'r') as json_data:
+with open(current_directory+"/PDFExtraction/intents.json", 'r') as json_data:
     intents = json.load(json_data)
 
-FILE = "../PDFExtraction/data.pth"
+FILE = current_directory+"/PDFExtraction/data.pth"
 data = torch.load(FILE)
 
 

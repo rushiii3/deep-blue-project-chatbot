@@ -205,12 +205,11 @@ const InfoSection = () => {
       <div class="relative z-20 mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Refreshingly Sustainable:
-            <span class="text-blue-600">Boxed Water</span>
+          
+            <span class="text-blue-600">Growth Gauge Guru </span>
           </h1>
           <h2 class="mt-6 text-lg leading-8 text-gray-600">
-            Choose a more eco-friendly way to hydrate with our 100% recyclable
-            cartons.
+          Gauge and measure your company's growth potential with expert precision.
           </h2>
           <div className="flex flex-row items-center justify-center gap-5">
             <div class="mt-10 flex items-center justify-center gap-x-6">

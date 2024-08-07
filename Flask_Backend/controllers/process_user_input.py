@@ -8,6 +8,7 @@ import labels_and_their_numeric_code_dict
 from transformers import pipeline,set_seed
 import json
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from pprint import pprint
 
 
 #print(predict_category_tfidf.labels_and_their_numeric_code_dict)
@@ -94,12 +95,20 @@ def determine_string_predicted_category(predicted_numerical_category):
     return None
 
 
-def generate_response(user_query):
+def generate_response(user_query,model,tokenizer):
+    print("generating response")
+    numeric_ids=tokenizer.encode(user_query,return_tensors="pt")
+    result=model.generate(numeric_ids,max_length=100,num_beams=5,no_repeat_ngram_size=2,early_stopping=True)
+    generated_text=tokenizer.decode(result[0],skip_special_tokens=True)
+    print(generated_text)
+    return generated_text
+    '''
     generator = pipeline('text-generation', model='gpt2-large',max_new_tokens=2000)
     set_seed(48)
     response=generator(user_query,num_return_sequences=1)
     #print(response["generated_text"])
     return response["generated_text"]
+    '''
 
 def summarize(text,tokenizer,model, maxSummarylength=500):
     # Encode the text and summarize
@@ -131,13 +140,35 @@ def get_pdf_text(predicted_main_heading,predicted_subheading):
         text_from_which_query_needs_to_be_answered=""
 
         for heading,subheadings_text_array in data.items():
+            text_found=False
+            
             for subheading_dict in subheadings_text_array:
+                #pprint(subheading_dict)
+                
                 subheading=list(subheading_dict.keys())[0]
-                if heading.strip()== predicted_main_heading and subheading.strip()==predicted_subheading:
+                #print(subheading)
+                #break
+                temp_predicted_subheading=predicted_subheading.split("_")
+                processed_predicted_subheading=" ".join(temp_predicted_subheading)
+                processed_predicted_subheading=processed_predicted_subheading.strip()
+                #print(subheading,processed_predicted_subheading)
+                #print(heading,predicted_main_heading)
+
+                if heading.lower().strip()== predicted_main_heading.strip() and subheading.lower().strip()==processed_predicted_subheading:
+                    print(f"the subheading and heading match {heading} {subheading}")
+                    text_found=True
                     text_from_which_query_needs_to_be_answered+=subheading_dict[subheading]
-                elif subheading=="all_text" or subheading=="before_first_subheading":
+                    #print(text_from_which_query_needs_to_be_answered)
+                elif subheading.lower().strip()=="all_text" or subheading.lower().strip()=="before_first_subheading":
                     text_from_which_query_needs_to_be_answered+=subheading_dict[subheading]
+                    text_found=True
+                if text_found:
+                    break
+            if text_found:break
+        
         if len(text_from_which_query_needs_to_be_answered)>0:
+            #print(text_from_which_query_needs_to_be_answered)
+            #print(text_from_which_query_needs_to_be_answered)
             return text_from_which_query_needs_to_be_answered
         else:
             return "no text found in pdf for the entered query"
@@ -165,13 +196,13 @@ def split_text_into_pieces(text,tokenizer,
     return text_pieces
 
 
-def recursive_summarize(text, tokenizer,model,max_length=200, recursionLevel=0):
+def recursive_summarize(text, tokenizer,model,max_length=51, recursionLevel=0):
     recursionLevel=recursionLevel+1
     print("######### Recursion level: ",
           recursionLevel,"\n\n######### ")
     tokens = tokenizer.tokenize(text)
     expectedCountOfChunks = len(tokens)/max_length
-    max_length=int(len(tokens)/expectedCountOfChunks)+2
+    max_length=int(len(tokens)/expectedCountOfChunks)
 
     print(f"Max length is:{max_length}")
     print(f" expected count of chunks is:{expectedCountOfChunks}")
@@ -194,13 +225,16 @@ def recursive_summarize(text, tokenizer,model,max_length=200, recursionLevel=0):
         print("****************************************************")
 
     concatenated_summary = ' '.join(summaries)
+    final_summary=concatenated_summary
+    return final_summary
 
+    '''
     tokens = tokenizer.tokenize(concatenated_summary)
 
     if len(tokens) > max_length:
         # If the concatenated_summary is too long, repeat the process
         print("############# GOING RECURSIVE ##############")
-        return recursive_summarize(concatenated_summary,
+        return recursive_summarize(concatenated_summary,tokenizer,model,
                                    max_length=max_length,
                                    recursionLevel=recursionLevel)
     else:
@@ -210,7 +244,8 @@ def recursive_summarize(text, tokenizer,model,max_length=200, recursionLevel=0):
             final_summary = summarize(concatenated_summary,
                                   maxSummarylength=max_length)
         return final_summary
-                    
+    '''
+                  
 
 '''
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,11 +253,11 @@ def recursive_summarize(text, tokenizer,model,max_length=200, recursionLevel=0):
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 '''
 
-
+print("HERE")
 spacy_large_model=spacy.load("en_core_web_lg")
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2-large')
-model = GPT2LMHeadModel.from_pretrained('gpt2-large')
-
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained('gpt2',pad_token_id=tokenizer.eos_token_id)
+print("HERE-1")
 sample_user_queries_list = [
     "What are the revenue sources for PDF Solutions?",
     "Where is PDF Solutions headquartered?",
@@ -250,28 +285,38 @@ sample_user_queries_list = [
 
 #predict the category
 for user_query in sample_user_queries_list:
+    print("here")
     predicted_category=determine_category(user_query)
+
+    print("here1")
+
     
     if predicted_category!=None:
         [main_heading,subheading]=predicted_category
     else:
         main_heading=subheading=None
 
+    print("here2")
     #go to the category and extract the text
     pdf_text= get_pdf_text(main_heading,subheading)
+    #break
 
     #form the answer to the user query
     if pdf_text!="no text found in pdf for the entered query":
         #generated_response=generate_response(user_query+" strictly use the below text to answer the question "+pdf_text)
         #summarize(user_query,pdf_text,tokenizer,model)
-        recursive_summarize("question:"+ user_query +" strictly use the below text to answer the question: "+
-                              pdf_text, tokenizer,model)
+        
+        #generated_response=recursive_summarize("question:"+ user_query +" strictly use the below text to answer the question: "+
+                              #pdf_text, tokenizer,model)
+        generated_response=generate_response(user_query,model,tokenizer)
     else:
-        generate_response="no text found in pdf for the entered query"
-    
+        generated_response="no text found in pdf for the entered query"
+    #break
 
     #return the answer
-    print(generate_response)
+    print("printing response")
+    print(generated_response)
+    #break
 
 
 
